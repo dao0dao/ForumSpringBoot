@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.iam_service.model.dto.CreatePostRequest;
-import com.post_hub.iam_service.service.PostServiceImp;
+import com.post_hub.iam_service.service.Impl.PostServiceImpl;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/posts")
 public class PostController {
 
-    private final PostServiceImp postService;
+    private final PostServiceImpl postService;
 
     @Autowired
-    public PostController(PostServiceImp postService) {
+    public PostController(PostServiceImpl postService) {
         this.postService = postService;
     }
 
