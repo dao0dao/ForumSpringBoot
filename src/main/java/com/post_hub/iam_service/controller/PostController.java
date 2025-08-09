@@ -1,38 +1,31 @@
 package com.post_hub.iam_service.controller;
 
-import java.util.Map;
-
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.post_hub.iam_service.model.dto.CreatePostRequest;
-import com.post_hub.iam_service.service.Impl.PostServiceImpl;
+import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.repositories.PostRepository;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/posts")
+@RequiredArgsConstructor
+@RequestMapping("${end.points.posts}")
 public class PostController {
 
-    private final PostServiceImpl postService;
+    private final PostRepository postRepository;
 
-    @Autowired
-    public PostController(PostServiceImpl postService) {
-        this.postService = postService;
-    }
+    @GetMapping("${end.points.id}")
+    public ResponseEntity<Post> getPostById(
+            @PathVariable(name = "id") Integer postId) {
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createPost(@RequestBody CreatePostRequest requestBody) {
-        String title = requestBody.getTitle();
-        String content = requestBody.getContent();
-        String post = "Title: " + title + "\nContent" + content;
-        this.postService.createPost(post);
-        return new ResponseEntity<String>("Created post with title: " + title, HttpStatus.OK);
+        return this.postRepository.findById(postId).map(ResponseEntity::ok).orElseGet(() -> {
+            return ResponseEntity.notFound().build();
+        });
     }
 
 }

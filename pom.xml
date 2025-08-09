@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.6.0</version> 
+			<version>42.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -92,13 +92,19 @@
 	<profiles>
 		<profile>
 			<id>local-ide</id>
-			<skipTest>true</skipTest>
-			<maven-properties.file>src/main/resources/application-local-idea.properties</maven-properties.file>
+			<properties>
+				<envName>local-ide</envName>
+				<skipTest>true</skipTest>
+				<maven-properties.file>src/main/resources/application-local-idea.properties</maven-properties.file>
+			</properties>
 		</profile>
 		<profile>
 			<id>prod</id>
-			<skipTest>true</skipTest>
-			<maven-properties.file>src/main/resources/application-prod.properties</maven-properties.file>
+			<properties>
+				<envName>prod</envName>
+				<skipTest>true</skipTest>
+				<maven-properties.file>src/main/resources/application-prod.properties</maven-properties.file>
+			</properties>
 		</profile>
 	</profiles>
 </project>
