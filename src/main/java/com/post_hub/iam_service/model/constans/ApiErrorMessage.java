@@ -12,6 +12,6 @@ public enum ApiErrorMessage {
     private final String message;
 
     public String getMessage(Integer id) {
-        return String.format(message, id);
+        return String.format(this.message, id);
     }
 }

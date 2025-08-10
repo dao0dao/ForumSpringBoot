@@ -4,10 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.constans.ApiLogMessage;
-import com.post_hub.iam_service.model.enteties.Post;
-import com.post_hub.iam_service.repositories.PostRepository;
+import com.post_hub.iam_service.model.dto.post.PostDTO;
+import com.post_hub.iam_service.model.response.ApiResponse;
+import com.post_hub.iam_service.service.PostService;
+import com.post_hub.iam_service.utils.ApiUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +22,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("${end.points.posts}")
 public class PostController {
 
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     @GetMapping("${end.points.id}")
-    public ResponseEntity<Post> getPostById(@PathVariable(name = "id") Integer postId) {
+    public ResponseEntity<ApiResponse<PostDTO>> getPostById(@PathVariable(name = "id") Integer postId) {
 
-        log.info(ApiLogMessage.POST_INFO_BY_ID.getMessage(postId));
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        return this.postRepository.findById(postId).map(ResponseEntity::ok).orElseGet(() -> {
-            log.info(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(postId));
-            return ResponseEntity.notFound().build();
-        });
+        ApiResponse<PostDTO> response = this.postService.getById(postId);
+        return ResponseEntity.ok(response);
     }
 
 }
