@@ -6,6 +6,7 @@ import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.enteties.Post;
 import com.post_hub.iam_service.model.exception.NotFoundException;
+import com.post_hub.iam_service.model.request.PostRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.repositories.PostRepository;
 import com.post_hub.iam_service.service.PostService;
@@ -29,6 +30,24 @@ public class PostServiceImpl implements PostService {
                 .id(post.getId())
                 .likes(post.getLikes())
                 .title(post.getTitle())
+                .build();
+
+        return ApiResponse.createSuccessful(postDTO);
+    }
+
+    @Override
+    public ApiResponse<PostDTO> createPost(@NotNull PostRequest request) {
+        Post post = Post.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .build();
+        Post savedPost = this.postRepository.save(post);
+        PostDTO postDTO = PostDTO.builder()
+                .content(savedPost.getContent())
+                .created(savedPost.getCreated())
+                .id(savedPost.getId())
+                .likes(savedPost.getLikes())
+                .title(savedPost.getTitle())
                 .build();
 
         return ApiResponse.createSuccessful(postDTO);
