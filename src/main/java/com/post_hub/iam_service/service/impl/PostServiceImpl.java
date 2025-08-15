@@ -2,6 +2,7 @@ package com.post_hub.iam_service.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import com.post_hub.iam_service.mapper.PostMapper;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.enteties.Post;
@@ -24,31 +25,38 @@ public class PostServiceImpl implements PostService {
         Post post = this.postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
-        PostDTO postDTO = PostDTO.builder()
-                .content(post.getContent())
-                .created(post.getCreated())
-                .id(post.getId())
-                .likes(post.getLikes())
-                .title(post.getTitle())
-                .build();
+        PostDTO postDTO = PostMapper.toDTO(post);
 
         return ApiResponse.createSuccessful(postDTO);
     }
 
     @Override
     public ApiResponse<PostDTO> createPost(@NotNull PostRequest request) {
-        Post post = Post.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
-                .build();
+        Post post = PostMapper.toEntity(request);
         Post savedPost = this.postRepository.save(post);
-        PostDTO postDTO = PostDTO.builder()
-                .content(savedPost.getContent())
-                .created(savedPost.getCreated())
-                .id(savedPost.getId())
-                .likes(savedPost.getLikes())
-                .title(savedPost.getTitle())
-                .build();
+        PostDTO postDTO = PostMapper.toDTO(savedPost);
+
+        return ApiResponse.createSuccessful(postDTO);
+    }
+
+    @Override
+    public ApiResponse<PostDTO> likePost(@NotNull Integer id) {
+        var post = this.postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
+        post.setLikes(post.getLikes() + 1);
+        var savedPost = this.postRepository.save(post);
+        PostDTO postDTO = PostMapper.toDTO(savedPost);
+
+        return ApiResponse.createSuccessful(postDTO);
+    }
+
+    @Override
+    public ApiResponse<PostDTO> dislikePost(@NotNull Integer id) {
+        var post = this.postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
+        post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
+        var savedPost = this.postRepository.save(post);
+        PostDTO postDTO = PostMapper.toDTO(savedPost);
 
         return ApiResponse.createSuccessful(postDTO);
     }

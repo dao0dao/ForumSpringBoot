@@ -1,7 +1,9 @@
 package com.post_hub.iam_service.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.iam_service.model.constans.ApiLogMessage;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,18 +33,33 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> getPostById(@PathVariable(name = "id") Integer postId) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        
+
         ApiResponse<PostDTO> response = this.postService.getById(postId);
         return ResponseEntity.ok(response);
     }
-    
+
     @PostMapping("${end.points.create}")
     public ResponseEntity<ApiResponse<PostDTO>> createPost(@RequestBody PostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        
-        ApiResponse<PostDTO> response = this.postService.createPost(request);        
-        return ResponseEntity.ok(response);
+
+        ApiResponse<PostDTO> response = this.postService.createPost(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
+    @PostMapping("${end.points.id}${end.points.like}")
+    public ResponseEntity<ApiResponse<PostDTO>> likePost(@PathVariable(name = "id") Integer postId) {
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+        
+        ApiResponse<PostDTO> response = this.postService.likePost(postId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("${end.points.id}${end.points.dislike}")
+    public ResponseEntity<ApiResponse<PostDTO>> dislikePost(@PathVariable(name = "id") Integer postId) {
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+        
+        ApiResponse<PostDTO> response = this.postService.dislikePost(postId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
 }
