@@ -7,11 +7,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ApiErrorMessage {
-    POST_ERROR_BY_ID("Post with ID: %d was not found");
+    POST_ERROR_BY_ID("Post with ID: {} was not found"),
+    POST_ALREADY_EXIST("Post with title: '%s' already exist");
 
     private final String message;
 
-    public String getMessage(Integer id) {
-        return String.format(this.message, id);
+    public String getMessage(Object... args) {
+        return String.format(this.message, args);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.post_hub.iam_service.model.constans.ApiConstans;
+import com.post_hub.iam_service.model.exception.DataExistException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +23,13 @@ public class CommonControllerAdvice {
     protected ResponseEntity<String> handleNotFoundException(Exception ex) {
         this.logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DataExistException.class)
+    @ResponseBody
+    protected ResponseEntity<String> handleDataExistException (DataExistException ex){
+        logStackTrace(ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     private void logStackTrace(Exception ex) {
