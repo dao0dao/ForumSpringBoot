@@ -26,6 +26,7 @@ public class PostMapper {
                 .id(post.getId())
                 .likes(post.getLikes())
                 .title(post.getTitle())
+                .updated(post.getUpdated())
                 .build();
     }
 }

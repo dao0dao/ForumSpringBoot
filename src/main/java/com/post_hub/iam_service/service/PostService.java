@@ -11,6 +11,7 @@ public interface PostService {
 
     ApiResponse<PostDTO> getById(@Nonnull Integer id);
     ApiResponse<PostDTO> createPost(@Nonnull PostRequest post);
+    ApiResponse<PostDTO> updatePost(@Nonnull Integer id, @Nonnull PostRequest post);
     ApiResponse<PostDTO> likePost(@Nonnull Integer id);
     ApiResponse<PostDTO> dislikePost(@Nonnull Integer post);
 }

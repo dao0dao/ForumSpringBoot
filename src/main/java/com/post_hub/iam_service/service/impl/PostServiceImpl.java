@@ -1,5 +1,7 @@
 package com.post_hub.iam_service.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.PostMapper;
@@ -33,12 +35,27 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ApiResponse<PostDTO> createPost(@NotNull PostRequest request) {
-        if(this.postRepository.existsByTitle(request.getTitle())){
+        if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
         Post post = PostMapper.toEntity(request);
         Post savedPost = this.postRepository.save(post);
         PostDTO postDTO = PostMapper.toDTO(savedPost);
+
+        return ApiResponse.createSuccessful(postDTO);
+    }
+
+    @Override
+    public ApiResponse<PostDTO> updatePost(@NotNull Integer id, PostRequest request) {
+        Post updatedPost = this.postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
+
+        updatedPost.setTitle(request.getTitle());
+        updatedPost.setContent(request.getContent());
+        updatedPost.setUpdated(LocalDateTime.now());
+        
+        this.postRepository.save(updatedPost);
+        PostDTO postDTO = PostMapper.toDTO(updatedPost);
 
         return ApiResponse.createSuccessful(postDTO);
     }

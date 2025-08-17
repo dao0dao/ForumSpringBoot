@@ -37,6 +37,10 @@ public class Post {
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Builder.Default()
     private LocalDateTime created = LocalDateTime.now();
+
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Builder.Default()
+    private LocalDateTime updated = LocalDateTime.now();
     
     @Column(nullable = false, columnDefinition = "integer default 0")
     @Builder.Default()
