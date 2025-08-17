@@ -13,6 +13,7 @@ import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.service.PostService;
 import com.post_hub.iam_service.utils.ApiUtils;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +40,7 @@ public class PostController {
     }
 
     @PostMapping("${end.points.create}")
-    public ResponseEntity<ApiResponse<PostDTO>> createPost(@RequestBody PostRequest request) {
+    public ResponseEntity<ApiResponse<PostDTO>> createPost(@RequestBody @Valid PostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         ApiResponse<PostDTO> response = this.postService.createPost(request);
