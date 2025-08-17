@@ -45,4 +45,8 @@ public class Post {
     @Column(nullable = false, columnDefinition = "integer default 0")
     @Builder.Default()
     private Integer likes = 0;
+    
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Builder.Default()
+    private Boolean deleted = false;
 }

@@ -25,7 +25,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ApiResponse<PostDTO> getById(@NotNull Integer id) {
-        Post post = this.postRepository.findById(id)
+        Post post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         PostDTO postDTO = PostMapper.toDTO(post);
@@ -47,13 +47,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ApiResponse<PostDTO> updatePost(@NotNull Integer id, PostRequest request) {
-        Post updatedPost = this.postRepository.findById(id)
+        Post updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         updatedPost.setTitle(request.getTitle());
         updatedPost.setContent(request.getContent());
         updatedPost.setUpdated(LocalDateTime.now());
-        
+
         this.postRepository.save(updatedPost);
         PostDTO postDTO = PostMapper.toDTO(updatedPost);
 
@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ApiResponse<PostDTO> likePost(@NotNull Integer id) {
-        var post = this.postRepository.findById(id)
+        var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
         post.setLikes(post.getLikes() + 1);
         var savedPost = this.postRepository.save(post);
@@ -73,13 +73,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ApiResponse<PostDTO> dislikePost(@NotNull Integer id) {
-        var post = this.postRepository.findById(id)
+        var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
         post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
         var savedPost = this.postRepository.save(post);
         PostDTO postDTO = PostMapper.toDTO(savedPost);
 
         return ApiResponse.createSuccessful(postDTO);
+    }
+
+    @Override
+    public void softDeletePost(Integer id) {
+        var post = this.postRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
+        post.setDeleted(true);
+        this.postRepository.save(post);
     }
 
 }

@@ -13,5 +13,6 @@ public interface PostService {
     ApiResponse<PostDTO> createPost(@Nonnull PostRequest post);
     ApiResponse<PostDTO> updatePost(@Nonnull Integer id, @Nonnull PostRequest post);
     ApiResponse<PostDTO> likePost(@Nonnull Integer id);
-    ApiResponse<PostDTO> dislikePost(@Nonnull Integer post);
+    ApiResponse<PostDTO> dislikePost(@Nonnull Integer id);
+    void softDeletePost(@Nonnull Integer id);
 }
