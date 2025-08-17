@@ -13,8 +13,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.post_hub.iam_service.model.constans.ApiConstans;
+import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.exception.DataExistException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,16 @@ public class CommonControllerAdvice {
     protected ResponseEntity<String> handleDataExistException(DataExistException ex) {
         logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseBody
+    protected ResponseEntity<String> handleTypeMismatchEntity(MethodArgumentTypeMismatchException ex) {
+        logStackTrace(ex);
+        var requiredType = ex.getRequiredType();
+        String message = (ApiErrorMessage.TYPE_MISMATCH.getMessage(ex.getName(),
+                requiredType != null ? requiredType.getSimpleName() : ApiConstans.UNDEFINED));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
     @ExceptionHandler()
