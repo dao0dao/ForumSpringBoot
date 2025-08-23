@@ -1,5 +1,7 @@
 package com.post_hub.iam_service.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,8 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.iam_service.model.constans.ApiLogMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
+import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.request.PostRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
+import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.service.PostService;
 import com.post_hub.iam_service.utils.ApiUtils;
 
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @RestController
@@ -35,13 +40,13 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> getPostById(@PathVariable(name = "id") Integer postId) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        
+
         ApiResponse<PostDTO> response = this.postService.getById(postId);
         return ResponseEntity.ok(response);
     }
-    
+
     @DeleteMapping("${end.points.id}")
-    public ResponseEntity<Void> deletePostById(@PathVariable (name = "id") Integer postId){
+    public ResponseEntity<Void> deletePostById(@PathVariable(name = "id") Integer postId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         this.postService.softDeletePost(postId);
@@ -80,4 +85,17 @@ public class PostController {
         ApiResponse<PostDTO> response = this.postService.createPost(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("${end.points.all}")
+    public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getMethodName(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer limit) {
+
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+
+        Pageable pageable = PageRequest.of(page, limit);
+        var response = this.postService.findAllPosts(pageable);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 }

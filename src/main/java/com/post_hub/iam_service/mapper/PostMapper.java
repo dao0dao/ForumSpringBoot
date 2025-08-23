@@ -1,6 +1,7 @@
 package com.post_hub.iam_service.mapper;
 
 import com.post_hub.iam_service.model.dto.post.PostDTO;
+import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.enteties.Post;
 import com.post_hub.iam_service.model.request.PostRequest;
 
@@ -27,6 +28,21 @@ public class PostMapper {
                 .likes(post.getLikes())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
+                .build();
+    }
+
+    public static PostSearchDTO toSearchDTO(Post post) {
+        if (post == null) {
+            return null;
+        }
+        return PostSearchDTO.builder()
+                .content(post.getContent())
+                .created(post.getCreated())
+                .id(post.getId())
+                .likes(post.getLikes())
+                .title(post.getTitle())
+                .updated(post.getUpdated())
+                .isDeleted(post.getDeleted())
                 .build();
     }
 }
