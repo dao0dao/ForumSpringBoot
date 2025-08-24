@@ -1,6 +1,12 @@
 package com.post_hub.iam_service.controller;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,11 +95,28 @@ public class PostController {
     @GetMapping("${end.points.all}")
     public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getMethodName(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer limit) {
-
+            @RequestParam(defaultValue = "10") Integer limit,
+            @RequestParam(required = false) ArrayList<String> sortsBy) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        Pageable pageable = PageRequest.of(page, limit);
+        
+        ArrayList<Order> orders = new ArrayList<>();
+
+        if (sortsBy == null || sortsBy.isEmpty()) {
+            orders.and(Sort.Order.asc("id"));
+        } else {
+            for (var fieldName : sortsBy) {
+                Order order;
+                if (fieldName.startsWith("-")) {
+                    order = Sort.Order.desc(fieldName.substring(1));
+                } else {
+                    order = Sort.Order.asc(fieldName);
+                }
+                orders.add(order);
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(orders));
         var response = this.postService.findAllPosts(pageable);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
