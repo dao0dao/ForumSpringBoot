@@ -21,6 +21,7 @@ import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.service.PostService;
 import com.post_hub.iam_service.utils.ApiUtils;
+import com.post_hub.iam_service.utils.PageBuilder;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -99,25 +100,8 @@ public class PostController {
             @RequestParam(required = false) ArrayList<String> sortsBy) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
+        var response = this.postService.findAllPosts(PageBuilder.getPageable(page, limit, sortsBy));
         
-        ArrayList<Order> orders = new ArrayList<>();
-
-        if (sortsBy == null || sortsBy.isEmpty()) {
-            orders.add(Sort.Order.asc("id"));
-        } else {
-            for (var fieldName : sortsBy) {
-                Order order;
-                if (fieldName.startsWith("-")) {
-                    order = Sort.Order.desc(fieldName.substring(1));
-                } else {
-                    order = Sort.Order.asc(fieldName);
-                }
-                orders.add(order);
-            }
-        }
-
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(orders));
-        var response = this.postService.findAllPosts(pageable);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
