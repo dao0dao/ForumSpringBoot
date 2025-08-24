@@ -103,7 +103,7 @@ public class PostController {
         ArrayList<Order> orders = new ArrayList<>();
 
         if (sortsBy == null || sortsBy.isEmpty()) {
-            orders.and(Sort.Order.asc("id"));
+            orders.add(Sort.Order.asc("id"));
         } else {
             for (var fieldName : sortsBy) {
                 Order order;
