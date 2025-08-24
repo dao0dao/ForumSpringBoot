@@ -1,13 +1,7 @@
 package com.post_hub.iam_service.controller;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
-
 import java.util.ArrayList;
-import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,7 +95,7 @@ public class PostController {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         var response = this.postService.findAllPosts(PageBuilder.getPageable(page, limit, sortsBy));
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
