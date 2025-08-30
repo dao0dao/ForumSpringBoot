@@ -11,6 +11,7 @@ import com.post_hub.iam_service.model.constans.ApiLogMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.request.PostRequest;
+import com.post_hub.iam_service.model.request.PostSearchRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.service.PostService;
@@ -95,6 +96,19 @@ public class PostController {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         var response = this.postService.findAllPosts(PageBuilder.getPageable(page, limit, sortsBy));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("${end.points.search}")
+    public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> searchPost(
+            @RequestBody @Valid PostSearchRequest request,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer limit,
+            @RequestParam(required = false) ArrayList<String> sortsBy) {
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+
+        var response = this.postService.searchPosts(request, PageBuilder.getPageable(page, limit, sortsBy));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

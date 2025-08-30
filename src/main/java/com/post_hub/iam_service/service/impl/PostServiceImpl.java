@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.PostMapper;
@@ -14,9 +15,11 @@ import com.post_hub.iam_service.model.enteties.Post;
 import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.PostRequest;
+import com.post_hub.iam_service.model.request.PostSearchRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.repositories.PostRepository;
+import com.post_hub.iam_service.repositories.criteria.PostSearchCriteria;
 import com.post_hub.iam_service.service.PostService;
 
 import jakarta.validation.constraints.NotNull;
@@ -97,6 +100,22 @@ public class PostServiceImpl implements PostService {
     @Override
     public ApiResponse<PaginationPayload<PostSearchDTO>> findAllPosts(Pageable pageable) {
         Page<PostSearchDTO> posts = this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
+
+        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
+                posts.getContent(),
+                new PaginationPayload.Pagination(
+                        posts.getTotalElements(),
+                        pageable.getPageSize(),
+                        posts.getNumber(),
+                        posts.getTotalPages()));
+
+        return ApiResponse.createSuccessful(payload);
+    }
+
+    @Override
+    public ApiResponse<PaginationPayload<PostSearchDTO>> searchPosts(PostSearchRequest request, Pageable pageable) {
+        Specification<Post> specification = new PostSearchCriteria(request);
+        Page<PostSearchDTO> posts = this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
 
         PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
                 posts.getContent(),
