@@ -2,8 +2,12 @@ package com.post_hub.iam_service.model.enteties;
 
 import java.time.LocalDateTime;
 
+import com.post_hub.iam_service.model.enums.RegistrationStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,9 +49,9 @@ public class User {
     @Builder.Default()
     private LocalDateTime updated = LocalDateTime.now();
 
-    @Size(max = 30)
-    @Column(nullable = false, length = 30)
-    private String registration_status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RegistrationStatus registration_status;
 
     @Column
     private LocalDateTime last_login;
