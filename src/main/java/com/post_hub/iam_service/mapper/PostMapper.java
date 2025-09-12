@@ -6,8 +6,6 @@ import com.post_hub.iam_service.model.enteties.Post;
 import com.post_hub.iam_service.model.request.PostRequest;
 
 public class PostMapper {
-    private PostMapper() {
-    }
 
     public static Post toEntity(PostRequest postRequest) {
         if (postRequest == null) {
