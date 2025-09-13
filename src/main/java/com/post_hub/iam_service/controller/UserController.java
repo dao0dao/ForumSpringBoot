@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.iam_service.model.constans.ApiLogMessage;
 import com.post_hub.iam_service.model.dto.user.UserDTO;
+import com.post_hub.iam_service.model.request.user.NewUserRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.service.UserService;
 import com.post_hub.iam_service.utils.ApiUtils;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @RestController
@@ -30,8 +34,17 @@ public class UserController {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<UserDTO> userDTO = this.userService.getById(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+        ApiResponse<UserDTO> apiResponse = this.userService.getById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @PostMapping("${end.points.create}")
+    public ResponseEntity<ApiResponse<UserDTO>> postMethodName(@RequestBody @Valid NewUserRequest request) {
+
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+
+        ApiResponse<UserDTO> apiResponse = this.userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
 }

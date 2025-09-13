@@ -6,7 +6,9 @@ import com.post_hub.iam_service.mapper.UserMapper;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.user.UserDTO;
 import com.post_hub.iam_service.model.enteties.User;
+import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
+import com.post_hub.iam_service.model.request.user.NewUserRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.service.UserService;
@@ -25,6 +27,19 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
         UserDTO userDTO = UserMapper.toDTO(user);
+        return ApiResponse.createSuccessful(userDTO);
+    }
+
+    @Override
+    public ApiResponse<UserDTO> createUser(NewUserRequest newUserRequest) {
+        User user = UserMapper.toEntity(newUserRequest);
+
+        if (this.userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
+            throw new DataExistException("User already exist");
+        }
+
+        User savedUser = this.userRepository.save(user);
+        UserDTO userDTO = UserMapper.toDTO(savedUser);
         return ApiResponse.createSuccessful(userDTO);
     }
 

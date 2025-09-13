@@ -2,6 +2,7 @@ package com.post_hub.iam_service.mapper;
 
 import com.post_hub.iam_service.model.dto.user.UserDTO;
 import com.post_hub.iam_service.model.enteties.User;
+import com.post_hub.iam_service.model.request.user.NewUserRequest;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
@@ -18,5 +19,16 @@ public class UserMapper {
                 .updated(user.getUpdated())
                 .username(user.getUsername())
                 .build();
+    }
+
+    public static User toEntity(NewUserRequest request){
+        if(request == null){
+            return null;
+        }
+        return User.builder()
+        .email(request.getEmail().toLowerCase())
+        .password(request.getPassword())
+        .username(request.getUsername().toLowerCase())
+        .build();
     }
 }

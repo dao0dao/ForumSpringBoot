@@ -3,7 +3,7 @@ package com.post_hub.iam_service.mapper;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.enteties.Post;
-import com.post_hub.iam_service.model.request.PostRequest;
+import com.post_hub.iam_service.model.request.post.PostRequest;
 
 public class PostMapper {
 

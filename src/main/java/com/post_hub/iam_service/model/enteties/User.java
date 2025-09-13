@@ -11,7 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = { "username", "email" }))
 @Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,7 +56,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RegistrationStatus registration_status;
+    @Builder.Default()
+    private RegistrationStatus registration_status = RegistrationStatus.INACTIVE;
 
     @Column
     private LocalDateTime last_login;
@@ -61,4 +65,15 @@ public class User {
     @Column
     @Builder.Default()
     private Boolean deleted = false;
+
+    @PrePersist
+    @PreUpdate
+    private void toLowercaseFields() {
+        if (this.username != null) {
+            this.username = this.username.toLowerCase();
+        }
+        if (this.email != null) {
+            this.email = this.email.toLowerCase();
+        }
+    }
 }
