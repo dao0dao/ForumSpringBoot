@@ -12,13 +12,16 @@ import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.model.enteties.User;
 import com.post_hub.iam_service.model.exception.DataExistException;
+import com.post_hub.iam_service.model.exception.NoAccessException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.post.PostRequest;
 import com.post_hub.iam_service.model.request.post.PostSearchRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.repositories.PostRepository;
+import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.repositories.criteria.PostSearchCriteria;
 import com.post_hub.iam_service.service.PostService;
 
@@ -29,6 +32,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
     final private PostRepository postRepository;
+    final private UserRepository userRepository;
 
     @Override
     public ApiResponse<PostDTO> getById(@NotNull Integer id) {
@@ -41,11 +45,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse<PostDTO> createPost(@NotNull PostRequest request) {
+    public ApiResponse<PostDTO> createPost(@NotNull PostRequest request, @NotNull Integer userId) {
         if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
-        Post post = PostMapper.toEntity(request);
+        User user = this.userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
+
+        Post post = PostMapper.toEntity(request, user);
+
         Post savedPost = this.postRepository.save(post);
         PostDTO postDTO = PostMapper.toDTO(savedPost);
 
@@ -53,13 +61,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse<PostDTO> updatePost(@NotNull Integer id, PostRequest request) {
+    public ApiResponse<PostDTO> updatePost(@NotNull Integer id, PostRequest request, @NotNull Integer userId) {
         Post updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
+        if (!updatedPost.getUser().getId().equals(userId)) {
+            throw new NoAccessException(ApiErrorMessage.USER_ACCESS_ERROR.getMessage(userId));
+        }
+
         updatedPost.setTitle(request.getTitle());
         updatedPost.setContent(request.getContent());
-        updatedPost.setUpdated(LocalDateTime.now());
 
         this.postRepository.save(updatedPost);
         PostDTO postDTO = PostMapper.toDTO(updatedPost);

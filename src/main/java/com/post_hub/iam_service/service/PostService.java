@@ -11,12 +11,13 @@ import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotNull;
 
 public interface PostService {
 
     ApiResponse<PostDTO> getById(@Nonnull Integer id);
-    ApiResponse<PostDTO> createPost(@Nonnull PostRequest post);
-    ApiResponse<PostDTO> updatePost(@Nonnull Integer id, @Nonnull PostRequest post);
+    ApiResponse<PostDTO> createPost(@Nonnull PostRequest post, @Nonnull Integer userId);
+    ApiResponse<PostDTO> updatePost(@Nonnull Integer id, @Nonnull PostRequest post, @Nonnull Integer userId);
     ApiResponse<PostDTO> likePost(@Nonnull Integer id);
     ApiResponse<PostDTO> dislikePost(@Nonnull Integer id);
     void softDeletePost(@Nonnull Integer id);

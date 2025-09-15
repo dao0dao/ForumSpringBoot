@@ -3,15 +3,16 @@ package com.post_hub.iam_service.mapper;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.model.enteties.User;
 import com.post_hub.iam_service.model.request.post.PostRequest;
 
 public class PostMapper {
 
-    public static Post toEntity(PostRequest postRequest) {
+    public static Post toEntity(PostRequest postRequest, User user) {
         if (postRequest == null) {
             return null;
         }
-        return Post.builder().title(postRequest.getTitle()).content(postRequest.getContent()).build();
+        return Post.builder().title(postRequest.getTitle()).content(postRequest.getContent()).user(user).build();
 
     }
 

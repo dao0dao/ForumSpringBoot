@@ -60,7 +60,10 @@ public class PostController {
             @Valid @RequestBody PostRequest post) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<PostDTO> response = this.postService.updatePost(postId, post);
+        // TODO when will be user validation remove this mock
+        Integer userId = 1;
+
+        ApiResponse<PostDTO> response = this.postService.updatePost(postId, post, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -84,12 +87,15 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> createPost(@RequestBody @Valid PostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<PostDTO> response = this.postService.createPost(request);
+        // TODO when will be user validation remove this mock
+        Integer userId = 1;
+
+        ApiResponse<PostDTO> response = this.postService.createPost(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("${end.points.all}")
-    public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getMethodName(
+    public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getAllPosts(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer limit,
             @RequestParam(required = false) ArrayList<String> sortsBy) {
