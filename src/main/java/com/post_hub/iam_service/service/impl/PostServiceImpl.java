@@ -1,7 +1,5 @@
 package com.post_hub.iam_service.service.impl;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,8 +9,8 @@ import com.post_hub.iam_service.mapper.PostMapper;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
-import com.post_hub.iam_service.model.enteties.Post;
-import com.post_hub.iam_service.model.enteties.User;
+import com.post_hub.iam_service.model.entities.Post;
+import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NoAccessException;
 import com.post_hub.iam_service.model.exception.NotFoundException;

@@ -1,11 +1,12 @@
 package com.post_hub.iam_service.service.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.UserMapper;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.user.UserDTO;
-import com.post_hub.iam_service.model.enteties.User;
+import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
+    final private PasswordEncoder passwordEncoder;
 
     @Override
     public ApiResponse<UserDTO> getById(@NotNull Integer userId) {
@@ -37,6 +39,8 @@ public class UserServiceImpl implements UserService {
         if (this.userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
             throw new DataExistException("User already exist");
         }
+
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         User savedUser = this.userRepository.save(user);
         UserDTO userDTO = UserMapper.toDTO(savedUser);

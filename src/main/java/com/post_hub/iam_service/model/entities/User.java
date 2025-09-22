@@ -1,8 +1,9 @@
-package com.post_hub.iam_service.model.enteties;
+package com.post_hub.iam_service.model.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.post_hub.iam_service.model.enums.RegistrationStatus;
 
@@ -15,22 +16,27 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
@@ -64,8 +70,8 @@ public class User {
     @Builder.Default()
     private RegistrationStatus registration_status = RegistrationStatus.INACTIVE;
 
-    @Column
-    private LocalDateTime last_login;
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
     @Column
     @Builder.Default()
@@ -74,6 +80,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default()
     private List<Post> posts = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "users_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     @PrePersist
     @PreUpdate
@@ -85,4 +99,6 @@ public class User {
             this.email = this.email.toLowerCase();
         }
     }
+
+    
 }

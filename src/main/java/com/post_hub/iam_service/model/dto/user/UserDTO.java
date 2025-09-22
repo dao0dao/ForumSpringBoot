@@ -22,6 +22,6 @@ public class UserDTO implements Serializable {
     private LocalDateTime created;
     private LocalDateTime updated;
     private RegistrationStatus registration_status;
-    private LocalDateTime last_login;
+    private LocalDateTime lastLogin;
     private Boolean deleted;
 }

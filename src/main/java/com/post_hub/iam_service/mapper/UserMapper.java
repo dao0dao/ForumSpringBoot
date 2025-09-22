@@ -1,7 +1,7 @@
 package com.post_hub.iam_service.mapper;
 
 import com.post_hub.iam_service.model.dto.user.UserDTO;
-import com.post_hub.iam_service.model.enteties.User;
+import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
 
 public class UserMapper {
@@ -13,7 +13,7 @@ public class UserMapper {
                 .created(user.getCreated())
                 .deleted(user.getDeleted())
                 .id(user.getId())
-                .last_login(user.getLast_login())
+                .lastLogin(user.getLastLogin())
                 .password(user.getPassword())
                 .registration_status(user.getRegistration_status())
                 .updated(user.getUpdated())

@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 
-import com.post_hub.iam_service.model.enteties.Post;
+import com.post_hub.iam_service.model.entities.Post;
 import com.post_hub.iam_service.model.request.post.PostSearchRequest;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
