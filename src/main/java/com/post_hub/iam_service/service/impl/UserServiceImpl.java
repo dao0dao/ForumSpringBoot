@@ -28,9 +28,6 @@ public class UserServiceImpl implements UserService {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
-        System.out.println("=======================");
-        System.out.println(user.getRoles().toString());
-        System.out.println("=======================");
         UserDTO userDTO = UserMapper.toDTO(user);
         return ApiResponse.createSuccessful(userDTO);
     }

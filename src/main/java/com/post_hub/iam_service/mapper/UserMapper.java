@@ -3,9 +3,9 @@ package com.post_hub.iam_service.mapper;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.post_hub.iam_service.model.dto.role.RoleDTO;
 import com.post_hub.iam_service.model.dto.user.UserDTO;
 import com.post_hub.iam_service.model.entities.User;
+import com.post_hub.iam_service.model.enums.UserRole;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
 
 public class UserMapper {
@@ -14,9 +14,9 @@ public class UserMapper {
             return null;
         }
 
-        Set<RoleDTO> roles = null;
+        Set<UserRole> roles = null;
         if (user.getRoles() != null) {
-            roles = user.getRoles().stream().map(role -> RoleMapper.toDTO(role)).collect(Collectors.toSet());
+            roles = user.getRoles().stream().map(role -> RoleMapper.toUserRole(role)).collect(Collectors.toSet());
         }
 
         return UserDTO.builder()

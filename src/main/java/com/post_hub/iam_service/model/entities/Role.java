@@ -2,7 +2,7 @@ package com.post_hub.iam_service.model.entities;
 
 import java.util.Set;
 
-import com.post_hub.iam_service.service.model.UserRole;
+import com.post_hub.iam_service.model.enums.UserRole;
 import com.post_hub.iam_service.utils.UserRoleTypeConverter;
 
 import jakarta.persistence.Column;

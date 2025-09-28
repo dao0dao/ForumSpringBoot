@@ -1,6 +1,6 @@
 package com.post_hub.iam_service.utils;
 
-import com.post_hub.iam_service.service.model.UserRole;
+import com.post_hub.iam_service.model.enums.UserRole;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Convert;
