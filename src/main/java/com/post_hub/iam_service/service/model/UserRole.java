@@ -11,4 +11,12 @@ public enum UserRole {
     USER("USER");
 
     private final String role;
+
+    public static UserRole fromName (String name){
+        try{
+            return UserRole.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return UserRole.USER;
+        }
+    }
 }

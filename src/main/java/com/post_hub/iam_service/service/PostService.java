@@ -11,7 +11,6 @@ import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 
 import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotNull;
 
 public interface PostService {
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.post_hub.iam_service.model.entities.Post;
@@ -15,7 +16,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 
 @AllArgsConstructor
 public class PostSearchCriteria implements Specification<Post> {
