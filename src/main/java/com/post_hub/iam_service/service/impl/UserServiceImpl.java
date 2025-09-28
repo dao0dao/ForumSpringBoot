@@ -1,16 +1,20 @@
 package com.post_hub.iam_service.service.impl;
 
+import java.util.Set;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.UserMapper;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.dto.user.UserDTO;
+import com.post_hub.iam_service.model.entities.Role;
 import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
 import com.post_hub.iam_service.model.response.ApiResponse;
+import com.post_hub.iam_service.repositories.RoleRepository;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.service.UserService;
 
@@ -22,6 +26,7 @@ import lombok.AllArgsConstructor;
 public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
     final private PasswordEncoder passwordEncoder;
+    final private RoleRepository roleRepository;
 
     @Override
     public ApiResponse<UserDTO> getById(@NotNull Integer userId) {
@@ -40,6 +45,10 @@ public class UserServiceImpl implements UserService {
             throw new DataExistException("User already exist");
         }
 
+        Role role = this.roleRepository.findByName(newUserRequest.getUserRole().toUpperCase()).orElseThrow(
+                () -> new NotFoundException(ApiErrorMessage.ROLE_ERROR.getMessage((newUserRequest.getUserRole()))));
+
+        user.setRoles(Set.of(role));
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         User savedUser = this.userRepository.save(user);

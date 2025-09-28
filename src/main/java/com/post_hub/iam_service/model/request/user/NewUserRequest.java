@@ -20,4 +20,7 @@ public class NewUserRequest implements Serializable {
 
     @NotBlank(message = "password can not be empty")
     private String password;
+
+    @NotBlank(message = "user role can not be empty")
+    private String userRole;
 }
