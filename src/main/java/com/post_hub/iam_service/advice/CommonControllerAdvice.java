@@ -10,9 +10,9 @@ import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.post_hub.iam_service.model.constans.ApiConstans;
@@ -23,25 +23,22 @@ import com.post_hub.iam_service.model.exception.NoAuthorizationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class CommonControllerAdvice {
 
     @ExceptionHandler
-    @ResponseBody
     protected ResponseEntity<String> handleNotFoundException(Exception ex) {
         this.logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(DataExistException.class)
-    @ResponseBody
     protected ResponseEntity<String> handleDataExistException(DataExistException ex) {
         logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseBody
     protected ResponseEntity<String> handleTypeMismatchEntity(MethodArgumentTypeMismatchException ex) {
         logStackTrace(ex);
         var requiredType = ex.getRequiredType();
@@ -51,7 +48,6 @@ public class CommonControllerAdvice {
     }
 
     @ExceptionHandler()
-    @ResponseBody
     protected ResponseEntity<Map<String, List<String>>> handleNotValidException(MethodArgumentNotValidException ex) {
         logStackTrace(ex);
         Map<String, List<String>> errors = new HashMap<>();
@@ -63,7 +59,6 @@ public class CommonControllerAdvice {
     }
 
     @ExceptionHandler(NoAuthorizationException.class)
-    @ResponseBody
     protected ResponseEntity<String> handleNoAuthorisationException(NoAuthorizationException ex) {
         logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
