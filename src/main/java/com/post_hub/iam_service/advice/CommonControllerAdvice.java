@@ -18,6 +18,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.post_hub.iam_service.model.constans.ApiConstans;
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.exception.DataExistException;
+import com.post_hub.iam_service.model.exception.NoAuthorizationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,6 +60,11 @@ public class CommonControllerAdvice {
                     .add(error.getDefaultMessage());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    protected ResponseEntity<String> handleNoAuthorisationException (NoAuthorizationException ex ){
+        logStackTrace(ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     private void logStackTrace(Exception ex) {

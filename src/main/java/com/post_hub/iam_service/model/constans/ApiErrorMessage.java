@@ -12,6 +12,7 @@ public enum ApiErrorMessage {
     TYPE_MISMATCH("Field '%s' has invalid value type. Expected '%s'."),
     USER_ACCESS_ERROR("Access denied"),
     USER_ERROR_BY_ID("User with ID: '%s' was not found"),
+    USER_NOT_FOUND("User was not found"),
     ROLE_ERROR("Role: '%s' was not found"),
 
     ERROR_DURNING_JWT_PROCESSING("An unexpected error occurred durning jwt processing"),
