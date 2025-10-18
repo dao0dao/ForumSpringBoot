@@ -2,7 +2,7 @@ package com.post_hub.iam_service.model.dto.user;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import com.post_hub.iam_service.model.enums.RegistrationStatus;
 import com.post_hub.iam_service.model.enums.UserRole;
@@ -23,7 +23,7 @@ public class UserDTO implements Serializable {
     private LocalDateTime created;
     private LocalDateTime updated;
     private RegistrationStatus registration_status;
-    private Set<UserRole> roles;
+    private List<UserRole> roles;
     private LocalDateTime lastLogin;
     private Boolean deleted;
 }
