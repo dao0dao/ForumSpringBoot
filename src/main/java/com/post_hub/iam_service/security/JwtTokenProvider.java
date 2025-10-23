@@ -2,7 +2,10 @@ package com.post_hub.iam_service.security;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -80,7 +83,7 @@ public class JwtTokenProvider {
         return this.createToken(claims, claims.getSubject());
     }
 
-    public Boolean isValidToken(String token) {
+    public boolean isValidToken(String token) {
         Claims claims = this.getAllClaims(token);
         return claims.getExpiration().after(new Date());
     }
@@ -92,6 +95,28 @@ public class JwtTokenProvider {
             return Integer.parseInt(userId.toString());
         } catch (Exception e) {
             throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
+        }
+    }
+
+    public String getUsername(String token) {
+        Claims claims = this.getAllClaims(token);
+        Object username = claims.get(AutethicationConstans.USERNAME);
+        try {
+            return username.toString();
+        } catch (Exception e) {
+            throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
+        }
+    }
+
+    public List<String> getUserRoles(String token) {
+        Claims claims = this.getAllClaims(token);
+        Object roles = claims.get(AutethicationConstans.ROLES);
+        List<?> list = (List<?>) roles;
+        try {
+            return list.stream().map(Object::toString).toList();
+        } catch (Exception e) {
+            throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.post_hub.iam_service.service.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         Role role = this.roleRepository.findByName(newUserRequest.getUserRole().toUpperCase()).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.ROLE_ERROR.getMessage((newUserRequest.getUserRole()))));
 
-        user.setRoles(Set.of(role));
+        user.setRoles(List.of(role));
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         User savedUser = this.userRepository.save(user);
