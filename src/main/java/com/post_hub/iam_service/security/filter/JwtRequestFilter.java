@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.post_hub.iam_service.security.JwtTokenProvider;
 import com.post_hub.iam_service.security.model.CustomUserDetails;
+import com.post_hub.iam_service.security.model.constans.SecurityConstans;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,9 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -34,10 +32,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+        String authorizationHeader = request.getHeader(SecurityConstans.AUTHORIZATION_HEADER);
 
-        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
-            String token = authorizationHeader.substring(BEARER_PREFIX.length());
+        if (authorizationHeader != null && authorizationHeader.startsWith(SecurityConstans.BEARER_PREFIX)) {
+            String token = authorizationHeader.substring(SecurityConstans.BEARER_PREFIX.length());
 
             if (this.jwtTokenProvider.isValidToken(token)) {
                 String username = this.jwtTokenProvider.getUsername(token);
