@@ -2,6 +2,7 @@ package com.post_hub.iam_service.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,8 @@ public class PostController {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<PostDTO> response = this.postService.getById(postId);
+        var postDTO = this.postService.getById(postId);
+        ApiResponse<PostDTO> response = ApiResponse.createSuccessful(postDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -63,7 +65,8 @@ public class PostController {
         // TODO when will be user validation remove this mock
         Integer userId = 1;
 
-        ApiResponse<PostDTO> response = this.postService.updatePost(postId, post, userId);
+        var updatedPost = this.postService.updatePost(postId, post, userId);
+        ApiResponse<PostDTO> response = ApiResponse.createSuccessful(updatedPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -71,7 +74,8 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> likePost(@PathVariable(name = "id") Integer postId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<PostDTO> response = this.postService.likePost(postId);
+        var likedPost = this.postService.likePost(postId);
+        ApiResponse<PostDTO> response = ApiResponse.createSuccessful(likedPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -79,7 +83,8 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> dislikePost(@PathVariable(name = "id") Integer postId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<PostDTO> response = this.postService.dislikePost(postId);
+        var dislikedPost = this.postService.dislikePost(postId);
+        ApiResponse<PostDTO> response = ApiResponse.createSuccessful(dislikedPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -90,7 +95,8 @@ public class PostController {
         // TODO when will be user validation remove this mock
         Integer userId = 1;
 
-        ApiResponse<PostDTO> response = this.postService.createPost(request, userId);
+        var createdPost = this.postService.createPost(request, userId);
+        ApiResponse<PostDTO> response = ApiResponse.createSuccessful(createdPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -101,7 +107,18 @@ public class PostController {
             @RequestParam(required = false) ArrayList<String> sortsBy) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        var response = this.postService.findAllPosts(PageBuilder.getPageable(page, limit, sortsBy));
+        var pageable = PageBuilder.getPageable(page, limit, sortsBy);
+        Page<PostSearchDTO> postsListPage = this.postService.findAllPosts(pageable);
+
+        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
+                postsListPage.getContent(),
+                new PaginationPayload.Pagination(
+                        postsListPage.getTotalElements(),
+                        pageable.getPageSize(),
+                        postsListPage.getNumber(),
+                        postsListPage.getTotalPages()));
+
+        var response = ApiResponse.createSuccessful(payload);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -114,7 +131,18 @@ public class PostController {
             @RequestParam(required = false) ArrayList<String> sortsBy) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        var response = this.postService.searchPosts(request, PageBuilder.getPageable(page, limit, sortsBy));
+        var pageable = PageBuilder.getPageable(page, limit, sortsBy);
+        var posts = this.postService.searchPosts(request, pageable);
+
+        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
+                posts.getContent(),
+                new PaginationPayload.Pagination(
+                        posts.getTotalElements(),
+                        pageable.getPageSize(),
+                        posts.getNumber(),
+                        posts.getTotalPages()));
+
+        var response = ApiResponse.createSuccessful(payload);        
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -1,25 +1,24 @@
 package com.post_hub.iam_service.service;
 
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.post_hub.iam_service.model.dto.post.PostDTO;
 import com.post_hub.iam_service.model.dto.post.PostSearchDTO;
 import com.post_hub.iam_service.model.request.post.PostRequest;
 import com.post_hub.iam_service.model.request.post.PostSearchRequest;
-import com.post_hub.iam_service.model.response.ApiResponse;
-import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 
 import jakarta.annotation.Nonnull;
 
 public interface PostService {
 
-    ApiResponse<PostDTO> getById(@Nonnull Integer id);
-    ApiResponse<PostDTO> createPost(@Nonnull PostRequest post, @Nonnull Integer userId);
-    ApiResponse<PostDTO> updatePost(@Nonnull Integer id, @Nonnull PostRequest post, @Nonnull Integer userId);
-    ApiResponse<PostDTO> likePost(@Nonnull Integer id);
-    ApiResponse<PostDTO> dislikePost(@Nonnull Integer id);
+    PostDTO getById(@Nonnull Integer id);
+    PostDTO createPost(@Nonnull PostRequest post, @Nonnull Integer userId);
+    PostDTO updatePost(@Nonnull Integer id, @Nonnull PostRequest post, @Nonnull Integer userId);
+    PostDTO likePost(@Nonnull Integer id);
+    PostDTO dislikePost(@Nonnull Integer id);
     void softDeletePost(@Nonnull Integer id);
-    ApiResponse<PaginationPayload<PostSearchDTO>> findAllPosts(Pageable pageable);
-    ApiResponse<PaginationPayload<PostSearchDTO>> searchPosts(@Nonnull PostSearchRequest request, Pageable pageable);
+    Page<PostSearchDTO> findAllPosts(Pageable pageable);
+    Page<PostSearchDTO> searchPosts(@Nonnull PostSearchRequest request, Pageable pageable);
 }

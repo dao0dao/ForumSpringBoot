@@ -16,8 +16,6 @@ import com.post_hub.iam_service.model.exception.NoAccessException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.post.PostRequest;
 import com.post_hub.iam_service.model.request.post.PostSearchRequest;
-import com.post_hub.iam_service.model.response.ApiResponse;
-import com.post_hub.iam_service.model.response.payloads.PaginationPayload;
 import com.post_hub.iam_service.repositories.PostRepository;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.repositories.criteria.PostSearchCriteria;
@@ -33,17 +31,15 @@ public class PostServiceImpl implements PostService {
     final private UserRepository userRepository;
 
     @Override
-    public ApiResponse<PostDTO> getById(@NotNull Integer id) {
+    public PostDTO getById(@NotNull Integer id) {
         Post post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
-        PostDTO postDTO = PostMapper.toDTO(post);
-
-        return ApiResponse.createSuccessful(postDTO);
+        return PostMapper.toDTO(post);
     }
 
     @Override
-    public ApiResponse<PostDTO> createPost(@NotNull PostRequest request, @NotNull Integer userId) {
+    public PostDTO createPost(@NotNull PostRequest request, @NotNull Integer userId) {
         if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
@@ -53,13 +49,11 @@ public class PostServiceImpl implements PostService {
         Post post = PostMapper.toEntity(request, user);
 
         Post savedPost = this.postRepository.save(post);
-        PostDTO postDTO = PostMapper.toDTO(savedPost);
-
-        return ApiResponse.createSuccessful(postDTO);
+        return PostMapper.toDTO(savedPost);
     }
 
     @Override
-    public ApiResponse<PostDTO> updatePost(@NotNull Integer id, PostRequest request, @NotNull Integer userId) {
+    public PostDTO updatePost(@NotNull Integer id, PostRequest request, @NotNull Integer userId) {
         Post updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
@@ -71,31 +65,25 @@ public class PostServiceImpl implements PostService {
         updatedPost.setContent(request.getContent());
 
         this.postRepository.save(updatedPost);
-        PostDTO postDTO = PostMapper.toDTO(updatedPost);
-
-        return ApiResponse.createSuccessful(postDTO);
+        return PostMapper.toDTO(updatedPost);
     }
 
     @Override
-    public ApiResponse<PostDTO> likePost(@NotNull Integer id) {
+    public PostDTO likePost(@NotNull Integer id) {
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
         post.setLikes(post.getLikes() + 1);
         var savedPost = this.postRepository.save(post);
-        PostDTO postDTO = PostMapper.toDTO(savedPost);
-
-        return ApiResponse.createSuccessful(postDTO);
+        return PostMapper.toDTO(savedPost);
     }
 
     @Override
-    public ApiResponse<PostDTO> dislikePost(@NotNull Integer id) {
+    public PostDTO dislikePost(@NotNull Integer id) {
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
         post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
         var savedPost = this.postRepository.save(post);
-        PostDTO postDTO = PostMapper.toDTO(savedPost);
-
-        return ApiResponse.createSuccessful(postDTO);
+        return PostMapper.toDTO(savedPost);
     }
 
     @Override
@@ -107,34 +95,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse<PaginationPayload<PostSearchDTO>> findAllPosts(Pageable pageable) {
-        Page<PostSearchDTO> posts = this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
-
-        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
-                posts.getContent(),
-                new PaginationPayload.Pagination(
-                        posts.getTotalElements(),
-                        pageable.getPageSize(),
-                        posts.getNumber(),
-                        posts.getTotalPages()));
-
-        return ApiResponse.createSuccessful(payload);
+    public Page<PostSearchDTO> findAllPosts(Pageable pageable) {
+        return this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
     }
 
     @Override
-    public ApiResponse<PaginationPayload<PostSearchDTO>> searchPosts(PostSearchRequest request, Pageable pageable) {
+    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, Pageable pageable) {
         Specification<Post> specification = new PostSearchCriteria(request);
-        Page<PostSearchDTO> posts = this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
-
-        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
-                posts.getContent(),
-                new PaginationPayload.Pagination(
-                        posts.getTotalElements(),
-                        pageable.getPageSize(),
-                        posts.getNumber(),
-                        posts.getTotalPages()));
-
-        return ApiResponse.createSuccessful(payload);
+        return this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
     }
 
 }
