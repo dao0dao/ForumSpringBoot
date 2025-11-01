@@ -13,7 +13,6 @@ import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.DataExistException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
-import com.post_hub.iam_service.model.response.ApiResponse;
 import com.post_hub.iam_service.repositories.RoleRepository;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.service.UserService;
