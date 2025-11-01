@@ -34,7 +34,8 @@ public class UserController {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<UserDTO> apiResponse = this.userService.getById(userId);
+        UserDTO userDTO = this.userService.getById(userId);
+        ApiResponse<UserDTO> apiResponse = ApiResponse.createSuccessful(userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
@@ -43,7 +44,8 @@ public class UserController {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        ApiResponse<UserDTO> apiResponse = this.userService.createUser(request);
+        UserDTO userDTO = this.userService.createUser(request);
+        ApiResponse<UserDTO> apiResponse = ApiResponse.createSuccessful(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 

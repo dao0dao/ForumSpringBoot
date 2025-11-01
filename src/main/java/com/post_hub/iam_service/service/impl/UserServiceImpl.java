@@ -29,16 +29,15 @@ public class UserServiceImpl implements UserService {
     final private RoleRepository roleRepository;
 
     @Override
-    public ApiResponse<UserDTO> getById(@NotNull Integer userId) {
+    public UserDTO getById(@NotNull Integer userId) {
         User user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
-        UserDTO userDTO = UserMapper.toDTO(user);
-        return ApiResponse.createSuccessful(userDTO);
+        return UserMapper.toDTO(user);
     }
 
     @Override
-    public ApiResponse<UserDTO> createUser(NewUserRequest newUserRequest) {
+    public UserDTO createUser(NewUserRequest newUserRequest) {
         User user = UserMapper.toEntity(newUserRequest);
 
         if (this.userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
@@ -52,8 +51,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         User savedUser = this.userRepository.save(user);
-        UserDTO userDTO = UserMapper.toDTO(savedUser);
-        return ApiResponse.createSuccessful(userDTO);
+        return UserMapper.toDTO(savedUser);
     }
 
 }
