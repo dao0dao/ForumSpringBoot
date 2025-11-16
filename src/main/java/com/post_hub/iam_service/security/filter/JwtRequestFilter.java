@@ -7,7 +7,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.post_hub.iam_service.security.JwtTokenProvider;
@@ -21,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Service
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -38,12 +41,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(SecurityConstans.BEARER_PREFIX.length());
 
             if (this.jwtTokenProvider.isValidToken(token)) {
-                String username = this.jwtTokenProvider.getUsername(token);
-                Integer userId = this.jwtTokenProvider.getUserId(token);
+                String userEmail = this.jwtTokenProvider.getUserEmail(token);
 
                 List<SimpleGrantedAuthority> authorities = this.jwtTokenProvider.getUserRoles(token).stream()
                         .map(SimpleGrantedAuthority::new).toList();
-                CustomUserDetails userDetails = new CustomUserDetails(userId, username, authorities);
+                UserDetails userDetails = new CustomUserDetails(userEmail, null, authorities);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 

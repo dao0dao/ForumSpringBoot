@@ -46,7 +46,7 @@ public class JwtTokenProvider {
     public String generateToken(@NonNull User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(AutethicationConstans.USER_ID, user.getId());
-        claims.put(AutethicationConstans.USERNAME, user.getUsername());
+        claims.put(AutethicationConstans.USER_EMAIL, user.getUsername());
         claims.put(AutethicationConstans.ROLES, user.getRoles().stream().filter(role -> role.getActive())
                 .map(role -> role.getUserSystemName()).toList());
         return this.createToken(claims, user.getEmail());
@@ -97,11 +97,11 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUsername(String token) {
+    public String getUserEmail(String token) {
         Claims claims = this.getAllClaims(token);
-        Object username = claims.get(AutethicationConstans.USERNAME);
+        Object userEmail = claims.get(AutethicationConstans.USER_EMAIL);
         try {
-            return username.toString();
+            return userEmail.toString();
         } catch (Exception e) {
             throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
         }

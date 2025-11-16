@@ -8,15 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
 public class CustomUserDetails implements UserDetails {
-    private Integer userId;
     private String username;
+    private String password;
     private List<SimpleGrantedAuthority> authorities;
 
     @Override
@@ -25,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
     }
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
     @Override
     public String getUsername() {

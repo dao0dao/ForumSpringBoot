@@ -1,5 +1,7 @@
 package com.post_hub.iam_service.service.impl;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +21,17 @@ import lombok.AllArgsConstructor;
 @Service
 public class AuthorizationServiceImpl implements AuthorizationsService {
 
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public AuthResult loginUser(String email, String password) {
+
+        var authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
+
         User user = this.userRepository.findByEmailAndDeletedFalse(email)
                 .orElseThrow(() -> new NotFoundException(ApiResponse.unauthorized().getMessage()));
 
