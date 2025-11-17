@@ -1,6 +1,5 @@
 package com.post_hub.iam_service.security.model;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new NotFoundException("User not found");
         }
 
-        var roles = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
-
-        return new CustomUserDetails(user.getEmail(), user.getPassword(), roles);
+        return new CustomUserDetails(user);
     }
 
 }

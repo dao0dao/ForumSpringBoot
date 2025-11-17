@@ -15,6 +15,7 @@ import com.post_hub.iam_service.model.constans.ApiErrorMessage;
 import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.NoAuthorizationException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
+import com.post_hub.iam_service.security.model.CustomUserDetails;
 import com.post_hub.iam_service.service.models.AutethicationConstans;
 
 import io.jsonwebtoken.Claims;
@@ -50,6 +51,14 @@ public class JwtTokenProvider {
         claims.put(AutethicationConstans.ROLES, user.getRoles().stream().filter(role -> role.getActive())
                 .map(role -> role.getUserSystemName()).toList());
         return this.createToken(claims, user.getEmail());
+    }
+
+    public String generateToken(@NonNull CustomUserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(AutethicationConstans.USER_ID, userDetails.getUserId());
+        claims.put(AutethicationConstans.USER_EMAIL, userDetails.getUsername());
+        claims.put(AutethicationConstans.ROLES, userDetails.getAuthorities().stream().map(authorities -> authorities.getAuthority()).toList());
+        return this.createToken(claims, userDetails.getUserEmail());
     }
 
     private String createToken(Map<String, Object> claims, String Subject) {

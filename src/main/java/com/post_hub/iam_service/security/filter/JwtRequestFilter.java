@@ -1,11 +1,9 @@
 package com.post_hub.iam_service.security.filter;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -43,9 +41,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (this.jwtTokenProvider.isValidToken(token)) {
                 String userEmail = this.jwtTokenProvider.getUserEmail(token);
 
-                List<SimpleGrantedAuthority> authorities = this.jwtTokenProvider.getUserRoles(token).stream()
-                        .map(SimpleGrantedAuthority::new).toList();
-                UserDetails userDetails = new CustomUserDetails(userEmail, null, authorities);
+                var roles = this.jwtTokenProvider.getUserRoles(token);
+                UserDetails userDetails = new CustomUserDetails(userEmail, roles);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 
