@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.model.entities.User;
+import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +19,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws NotFoundException {
         User user = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         }
 
         var roles = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
