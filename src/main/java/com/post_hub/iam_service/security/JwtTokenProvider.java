@@ -44,15 +44,6 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(decode64);
     }
 
-    public String generateToken(@NonNull User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(AutethicationConstans.USER_ID, user.getId());
-        claims.put(AutethicationConstans.USER_EMAIL, user.getUsername());
-        claims.put(AutethicationConstans.ROLES, user.getRoles().stream().filter(role -> role.getActive())
-                .map(role -> role.getUserSystemName()).toList());
-        return this.createToken(claims, user.getEmail());
-    }
-
     public String generateToken(@NonNull CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(AutethicationConstans.USER_ID, userDetails.getUserId());
