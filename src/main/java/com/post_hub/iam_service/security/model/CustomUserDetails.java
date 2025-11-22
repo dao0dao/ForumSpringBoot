@@ -19,14 +19,6 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private List<SimpleGrantedAuthority> authorities;
 
-    public CustomUserDetails(String userEmail, List<String> roles) {
-        // this.userId = user.getId();
-        // this.username = user.getUsername();
-        this.userEmail = userEmail;
-        // this.password = user.getPassword();
-        this.authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role)).toList();
-    }
-
     public CustomUserDetails(User user) {
         this.userId = user.getId();
         this.username = user.getUsername();

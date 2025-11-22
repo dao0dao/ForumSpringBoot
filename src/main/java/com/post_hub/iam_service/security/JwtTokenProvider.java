@@ -2,7 +2,6 @@ package com.post_hub.iam_service.security;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.crypto.SecretKey;
@@ -12,7 +11,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.post_hub.iam_service.model.constans.ApiErrorMessage;
-import com.post_hub.iam_service.model.entities.User;
 import com.post_hub.iam_service.model.exception.NoAuthorizationException;
 import com.post_hub.iam_service.model.exception.NotFoundException;
 import com.post_hub.iam_service.security.model.CustomUserDetails;
@@ -46,9 +44,7 @@ public class JwtTokenProvider {
 
     public String generateToken(@NonNull CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(AutethicationConstans.USER_ID, userDetails.getUserId());
         claims.put(AutethicationConstans.USER_EMAIL, userDetails.getUsername());
-        claims.put(AutethicationConstans.ROLES, userDetails.getAuthorities().stream().map(authorities -> authorities.getAuthority()).toList());
         return this.createToken(claims, userDetails.getUserEmail());
     }
 
@@ -87,16 +83,6 @@ public class JwtTokenProvider {
         return claims.getExpiration().after(new Date());
     }
 
-    public Integer getUserId(String token) {
-        Claims claims = this.getAllClaims(token);
-        Object userId = claims.get(AutethicationConstans.USER_ID);
-        try {
-            return Integer.parseInt(userId.toString());
-        } catch (Exception e) {
-            throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
-        }
-    }
-
     public String getUserEmail(String token) {
         Claims claims = this.getAllClaims(token);
         Object userEmail = claims.get(AutethicationConstans.USER_EMAIL);
@@ -104,18 +90,6 @@ public class JwtTokenProvider {
             return userEmail.toString();
         } catch (Exception e) {
             throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
-        }
-    }
-
-    public List<String> getUserRoles(String token) {
-        Claims claims = this.getAllClaims(token);
-        Object roles = claims.get(AutethicationConstans.ROLES);
-        List<?> list = (List<?>) roles;
-        try {
-            return list.stream().map(Object::toString).toList();
-        } catch (Exception e) {
-            throw new NotFoundException(ApiErrorMessage.USER_NOT_FOUND.getMessage());
-
         }
     }
 }

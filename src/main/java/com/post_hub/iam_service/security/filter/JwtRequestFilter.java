@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.post_hub.iam_service.security.JwtTokenProvider;
-import com.post_hub.iam_service.security.model.CustomUserDetails;
+import com.post_hub.iam_service.security.model.CustomUserDetailsService;
 import com.post_hub.iam_service.security.model.constans.SecurityConstans;
 
 import jakarta.servlet.FilterChain;
@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -35,14 +36,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader(SecurityConstans.AUTHORIZATION_HEADER);
 
-        if (authorizationHeader != null && authorizationHeader.startsWith(SecurityConstans.BEARER_PREFIX)) {
+        if (authorizationHeader != null
+                && authorizationHeader.startsWith(SecurityConstans.BEARER_PREFIX)
+                && SecurityContextHolder.getContext().getAuthentication() != null) {
+
             String token = authorizationHeader.substring(SecurityConstans.BEARER_PREFIX.length());
 
             if (this.jwtTokenProvider.isValidToken(token)) {
                 String userEmail = this.jwtTokenProvider.getUserEmail(token);
 
-                var roles = this.jwtTokenProvider.getUserRoles(token);
-                UserDetails userDetails = new CustomUserDetails(userEmail, roles);
+                UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 
