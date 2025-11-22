@@ -3,7 +3,6 @@ package com.post_hub.iam_service.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.PostMapper;
@@ -20,7 +19,6 @@ import com.post_hub.iam_service.model.request.post.PostSearchRequest;
 import com.post_hub.iam_service.repositories.PostRepository;
 import com.post_hub.iam_service.repositories.UserRepository;
 import com.post_hub.iam_service.repositories.criteria.PostSearchCriteria;
-import com.post_hub.iam_service.security.model.CustomUserDetails;
 import com.post_hub.iam_service.service.PostService;
 
 import jakarta.validation.constraints.NotNull;
