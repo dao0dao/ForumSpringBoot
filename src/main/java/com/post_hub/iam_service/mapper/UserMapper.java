@@ -41,4 +41,12 @@ public class UserMapper {
                 .username(request.getUsername().toLowerCase())
                 .build();
     }
+
+    public static User toEntity(String email, String password) {
+        return User.builder()
+                .email(email)
+                .password(password)
+                .username(email)
+                .build();
+    }
 }

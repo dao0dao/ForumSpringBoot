@@ -1,4 +1,4 @@
-package com.post_hub.iam_service.model.request.login;
+package com.post_hub.iam_service.model.request.authorization;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class AuthorizationRequest {
     
     @NotBlank(message = "Email can not be empty")
     private String email;

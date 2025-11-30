@@ -1,5 +1,7 @@
 package com.post_hub.iam_service.security.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-
+        user.setLastLogin(LocalDateTime.now());
+        this.userRepository.save(user);
         return new CustomUserDetails(user);
     }
 

@@ -27,6 +27,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private static final String[] AUTH_WHITELIST = {
             "/login",
+            "/register"
     };
 
     @Bean
