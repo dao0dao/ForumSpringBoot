@@ -1,5 +1,6 @@
 package com.post_hub.iam_service.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,8 @@ public class AuthorizationController {
 
         ApiResponse<UserProfileDTO> body = ApiResponse.tokenCreateUpdated(authResult.getUserProfile());
         return ResponseEntity.ok()
-                .header(SecurityConstans.AUTHORIZATION_HEADER, SecurityConstans.BEARER_PREFIX + authResult.getToken())
+                // .header(SecurityConstans.AUTHORIZATION_HEADER, SecurityConstans.BEARER_PREFIX + authResult.getToken())
+                .header(HttpHeaders.SET_COOKIE, ApiUtils.getCookie(SecurityConstans.JWT_COOKIE_NAME, authResult.getToken()))
                 .body(body);
     }
 }

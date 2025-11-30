@@ -16,6 +16,7 @@ import com.post_hub.iam_service.security.model.constans.SecurityConstans;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,25 +35,26 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(SecurityConstans.AUTHORIZATION_HEADER);
+        var cookies = request.getCookies();
 
-        if (authorizationHeader != null
-                && authorizationHeader.startsWith(SecurityConstans.BEARER_PREFIX)
-                && SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            String token = authorizationHeader.substring(SecurityConstans.BEARER_PREFIX.length());
+            for (Cookie cookie : cookies) {
+                if (SecurityConstans.JWT_COOKIE_NAME.equals(cookie.getName())) {
+                    var token = cookie.getValue();
+                    if (this.jwtTokenProvider.isValidToken(token)) {
+                        String userEmail = this.jwtTokenProvider.getUserEmail(token);
 
-            if (this.jwtTokenProvider.isValidToken(token)) {
-                String userEmail = this.jwtTokenProvider.getUserEmail(token);
+                        UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
 
-                UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userEmail);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
             }
 
         }
