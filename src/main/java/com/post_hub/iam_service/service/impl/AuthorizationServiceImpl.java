@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.iam_service.mapper.UserMapper;
@@ -64,6 +65,12 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
 
         this.userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public String refreshToken() {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return jwtTokenProvider.generateToken(userDetails);
     }
 
 }

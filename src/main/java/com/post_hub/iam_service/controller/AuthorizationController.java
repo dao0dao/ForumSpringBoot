@@ -20,6 +20,7 @@ import com.post_hub.iam_service.utils.ApiUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
 @RestController
@@ -39,7 +40,7 @@ public class AuthorizationController {
         ApiResponse<UserProfileDTO> body = ApiResponse.tokenCreateUpdated(authResult.getUserProfile());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE,
-                        ApiUtils.getCookie(SecurityConstans.JWT_COOKIE_NAME, authResult.getToken()))
+                        ApiUtils.createCookie(SecurityConstans.JWT_COOKIE_NAME, authResult.getToken()))
                 .body(body);
     }
 
@@ -49,6 +50,13 @@ public class AuthorizationController {
 
         this.authorizationsService.registerUser(authRequest.getEmail(), authRequest.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("${end.points.token}${end.points.refresh}")
+    public ResponseEntity<Void> getMethodName() {
+        String token = this.authorizationsService.refreshToken();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, ApiUtils.createCookie(SecurityConstans.JWT_COOKIE_NAME, token)).build();
     }
 
 }

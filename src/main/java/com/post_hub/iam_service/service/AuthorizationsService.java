@@ -6,4 +6,6 @@ public interface AuthorizationsService {
     AuthResult loginUser(String email, String password);
 
     Boolean registerUser(String email, String password);
+
+    String refreshToken();
 }
