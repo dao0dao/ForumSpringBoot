@@ -10,9 +10,9 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.post_hub</groupId>
-	<artifactId>iam_service</artifactId>
+	<artifactId>refreshing_knowledge_of_SpringBoot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>iam_service</name>
+	<name>refreshing_knowledge_of_SpringBoot</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>

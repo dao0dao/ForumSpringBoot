@@ -1,0 +1,15 @@
+package com.post_hub.refreshing_knowledge_of_SpringBoot.repositories;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+
+public interface UserRepository extends JpaRepository<User, Integer> {
+    boolean existsByUsernameOrEmail(String username, String email);
+
+    boolean existsByEmail(String email);
+
+    Optional<User> findByEmailAndDeletedFalse(String email);
+}
