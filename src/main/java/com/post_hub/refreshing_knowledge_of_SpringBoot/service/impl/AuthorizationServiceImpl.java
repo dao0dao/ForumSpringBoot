@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserProfileMapper;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiConstans;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserProfileDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Role;
@@ -17,6 +18,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.WrongDataException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.RoleRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.JwtTokenProvider;
@@ -53,13 +55,29 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
 
     @Override
     public Boolean registerUser(String email, String password) {
+        if (password.length() < ApiConstans.PASSWORD_MIN_LENGTH ||
+                password.length() > ApiConstans.PASSWORD_MAX_LENGTH) {
+            throw new WrongDataException("Password length must be between " +
+                    ApiConstans.PASSWORD_MIN_LENGTH + " and " + ApiConstans.PASSWORD_MAX_LENGTH);
+        }
+        if(!password.chars().anyMatch(singleChar -> ApiConstans.PASSWORD_SPECIAL_CHARS.indexOf(singleChar) >= 0)) {
+            throw new WrongDataException("Password must contain at least one special character: " +
+                    ApiConstans.PASSWORD_SPECIAL_CHARS);
+        }
+        if(!password.chars().anyMatch(singleChar -> Character.isLowerCase(singleChar)) ) {
+            throw new WrongDataException("Password must contain lowercase letters.");
+        }
+        if(!password.chars().anyMatch(singleChar -> Character.isUpperCase(singleChar)) ) {
+            throw new WrongDataException("Password must contain uppercase letters.");
+        }
+
         var isUserExist = this.userRepository.existsByEmail(email);
         if (isUserExist) {
             throw new DataExistException("can not create user");
         }
         password = this.passwordEncoder.encode(password);
         User user = UserMapper.toEntity(email, password);
-        
+
         Role role = this.roleRepository.findByName(UserRole.USER.getRole()).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.ROLE_ERROR.getMessage((UserRole.USER.getRole()))));
 
@@ -71,7 +89,8 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
 
     @Override
     public String refreshToken() {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
         return jwtTokenProvider.generateToken(userDetails);
     }
 

@@ -18,6 +18,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiConstan
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NoAuthorizationException;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.WrongDataException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,5 +86,11 @@ public class CommonControllerAdvice {
 
         log.error(stackTrace.append(ApiConstans.ANSI_WHITE).toString());
 
+    }
+    
+    @ExceptionHandler(WrongDataException.class)
+    protected ResponseEntity<String> handleWrongDataException(WrongDataException ex) {
+        logStackTrace(ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
