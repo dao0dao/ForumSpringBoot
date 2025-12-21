@@ -53,17 +53,20 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
     }
 
     @Override
-    public Boolean registerUser(String email, String password) {
+    public Boolean registerUser(String email, String password, String confirmPassword) {
         if (password.length() < ApiConstans.PASSWORD_MIN_LENGTH ||
                 password.length() > ApiConstans.PASSWORD_MAX_LENGTH ||
                 !password.chars().anyMatch(singleChar -> ApiConstans.PASSWORD_SPECIAL_CHARS.indexOf(singleChar) >= 0) ||
                 !password.chars().anyMatch(singleChar -> Character.isLowerCase(singleChar)) ||
-                !password.chars().anyMatch(singleChar -> Character.isUpperCase(singleChar))) {
+                !password.chars().anyMatch(singleChar -> Character.isUpperCase(singleChar)) ) {
             throw new NotFoundException(
                     "Password must be between " + ApiConstans.PASSWORD_MIN_LENGTH + " and "
                             + ApiConstans.PASSWORD_MAX_LENGTH +
                             ", contain at least one special character: " + ApiConstans.PASSWORD_SPECIAL_CHARS +
                             ", one lowercase and one uppercase letter.");
+        }
+        if (!password.equals(confirmPassword)) {
+            throw new NotFoundException("Password and Confirm password do not match.");
         }
 
         var isUserExist = this.userRepository.existsByEmail(email);

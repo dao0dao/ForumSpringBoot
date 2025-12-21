@@ -15,4 +15,7 @@ public class AuthorizationRequest {
 
     @NotBlank(message = "Password can not be empty")
     private String password;
+
+    @NotBlank(message = "Confirm password can not be empty")
+    private String confirmPassword;
 }

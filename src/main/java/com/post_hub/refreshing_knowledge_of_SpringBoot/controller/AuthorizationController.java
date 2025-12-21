@@ -48,7 +48,7 @@ public class AuthorizationController {
     public ResponseEntity<Void> registerUser(@RequestBody AuthorizationRequest authRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        this.authorizationsService.registerUser(authRequest.getEmail(), authRequest.getPassword());
+        this.authorizationsService.registerUser(authRequest.getEmail(), authRequest.getPassword(), authRequest.getConfirmPassword());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
