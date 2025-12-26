@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.JwtTokenProvider;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.CustomUserDetailsService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.constans.SecurityConstans;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (!CurrentUser.isExist()) {
 
             for (Cookie cookie : cookies) {
                 if (SecurityConstans.JWT_COOKIE_NAME.equals(cookie.getName())) {

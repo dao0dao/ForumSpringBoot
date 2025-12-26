@@ -25,6 +25,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.CustomUser
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.validators.PasswordValidator;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.AuthorizationsService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.models.AuthResult;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
 import lombok.AllArgsConstructor;
 
@@ -38,6 +39,7 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @SuppressWarnings("null")
     @Override
     public AuthResult loginUser(String email, String password) {
 
@@ -83,10 +85,10 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
         return true;
     }
 
+    @SuppressWarnings("null")
     @Override
     public String refreshToken() {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+        CustomUserDetails userDetails = CurrentUser.getUserDetails();
         return jwtTokenProvider.generateToken(userDetails);
     }
 
