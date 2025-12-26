@@ -58,7 +58,7 @@ public class CommonControllerAdvice {
     }
 
     @ExceptionHandler(NoAuthorizationException.class)
-    protected ResponseEntity<String> handleNoAuthorisationException(NoAuthorizationException ex) {
+    protected ResponseEntity<String> handleNoAuthorizationException(NoAuthorizationException ex) {
         logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
