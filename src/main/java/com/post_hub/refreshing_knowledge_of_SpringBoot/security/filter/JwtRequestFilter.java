@@ -37,6 +37,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         var cookies = request.getCookies();
 
+        if(cookies == null){
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
             for (Cookie cookie : cookies) {
