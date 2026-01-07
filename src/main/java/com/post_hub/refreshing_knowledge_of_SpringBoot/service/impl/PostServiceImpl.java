@@ -20,6 +20,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.PostReposito
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.criteria.PostSearchCriteria;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -72,16 +73,18 @@ public class PostServiceImpl implements PostService {
     public PostDTO likePost(@NotNull Integer id) {
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
-        post.setLikes(post.getLikes() + 1);
+        // post.setLikes(post.getLikes() + 1);
         var savedPost = this.postRepository.save(post);
         return PostMapper.toDTO(savedPost);
     }
 
     @Override
     public PostDTO dislikePost(@NotNull Integer id) {
+        var user = CurrentUser.getUserDetails();
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
-        post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
+        // post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
+        var likedBy = post.getLikedBy();
         var savedPost = this.postRepository.save(post);
         return PostMapper.toDTO(savedPost);
     }

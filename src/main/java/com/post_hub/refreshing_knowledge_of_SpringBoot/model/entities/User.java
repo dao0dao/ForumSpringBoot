@@ -2,7 +2,9 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.RegistrationStatus;
 
@@ -74,17 +76,18 @@ public class User {
     @Column
     @Builder.Default()
     private Boolean deleted = false;
-    
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default()
     private List<Post> posts = new ArrayList<>();
-    
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(name = "posts_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @Builder.Default()
+    private Set<Post> likes = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-        )
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
     @PrePersist
@@ -98,5 +101,4 @@ public class User {
         }
     }
 
-    
 }

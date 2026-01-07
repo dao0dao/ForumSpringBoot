@@ -1,7 +1,12 @@
 package com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.hibernate.annotations.Formula;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -58,15 +65,19 @@ public class Post {
 
     @Column(nullable = false)
     @Builder.Default()
-    private Integer likes = 0;
-
-    @Column(nullable = false)
-    @Builder.Default()
     private Boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
+    @Builder.Default()
+    private Set<User> likedBy = new HashSet<>();
+
+    @Formula("(select count(*) from posts_likes pl where pl.post_id = id)")
+    @Builder.Default()
+    private Integer likesCount = 0;
 
     @PrePersist
     private void initTime() {

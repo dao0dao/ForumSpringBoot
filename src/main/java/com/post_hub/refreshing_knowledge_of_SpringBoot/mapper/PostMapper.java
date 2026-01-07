@@ -24,7 +24,7 @@ public class PostMapper {
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
-                .likes(post.getLikes())
+                .likes(post.getLikesCount())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .build();
@@ -38,7 +38,7 @@ public class PostMapper {
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
-                .likes(post.getLikes())
+                .likes(post.getLikesCount())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .isDeleted(post.getDeleted())

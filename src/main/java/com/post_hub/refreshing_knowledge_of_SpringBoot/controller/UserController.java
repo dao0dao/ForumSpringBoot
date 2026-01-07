@@ -30,7 +30,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("${end.points.id}")
-    public ResponseEntity<ApiResponse<UserDTO>> getMethodName(@PathVariable(name = "id") Integer userId) {
+    public ResponseEntity<ApiResponse<UserDTO>> getUser(@PathVariable(name = "id") Integer userId) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("${end.points.create}")
-    public ResponseEntity<ApiResponse<UserDTO>> postMethodName(@RequestBody @Valid NewUserRequest request) {
+    public ResponseEntity<ApiResponse<UserDTO>> createUser(@RequestBody @Valid NewUserRequest request) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
