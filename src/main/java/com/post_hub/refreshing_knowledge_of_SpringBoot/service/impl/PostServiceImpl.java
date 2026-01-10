@@ -71,22 +71,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO likePost(@NotNull Integer id) {
+        var userId = CurrentUser.getUserId();
+        this.postRepository.addLIke(userId, id);
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
-        // post.setLikes(post.getLikes() + 1);
-        var savedPost = this.postRepository.save(post);
-        return PostMapper.toDTO(savedPost);
+
+        return PostMapper.toDTO(post);
     }
 
     @Override
     public PostDTO dislikePost(@NotNull Integer id) {
-        var user = CurrentUser.getUserDetails();
+        var userId = CurrentUser.getUserId();
+        this.postRepository.deleteLike(userId, id);
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
-        // post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
-        var likedBy = post.getLikedBy();
-        var savedPost = this.postRepository.save(post);
-        return PostMapper.toDTO(savedPost);
+
+        return PostMapper.toDTO(post);
     }
 
     @Override

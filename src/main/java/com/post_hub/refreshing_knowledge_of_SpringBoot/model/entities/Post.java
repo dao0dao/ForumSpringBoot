@@ -73,7 +73,7 @@ public class Post {
     @Builder.Default()
     private Set<User> likedBy = new HashSet<>();
 
-    @Formula("(select count(*) from posts_likes pl where pl.post_id = id)")
+    @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
     @Builder.Default()
     private Integer likesCount = 0;
 
