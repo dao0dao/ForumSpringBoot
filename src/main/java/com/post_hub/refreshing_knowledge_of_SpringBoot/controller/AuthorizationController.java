@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Slf4j
 @RestController
@@ -48,7 +49,8 @@ public class AuthorizationController {
     public ResponseEntity<Void> registerUser(@RequestBody AuthorizationRequest authRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        this.authorizationsService.registerUser(authRequest.getEmail(), authRequest.getPassword(), authRequest.getConfirmPassword());
+        this.authorizationsService.registerUser(authRequest.getEmail(), authRequest.getPassword(),
+                authRequest.getConfirmPassword());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -57,6 +59,15 @@ public class AuthorizationController {
         String token = this.authorizationsService.refreshToken();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, ApiUtils.createCookie(SecurityConstans.JWT_COOKIE_NAME, token)).build();
+    }
+
+    @PostMapping("${end.points.logout}")
+    public ResponseEntity<Void> logout() {
+        System.out.println("==============================================User logged out successfully.");
+        this.authorizationsService.logoutUser();
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, ApiUtils.deleteCookie(SecurityConstans.JWT_COOKIE_NAME))
+                .build();
     }
 
 }

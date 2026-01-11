@@ -27,4 +27,6 @@ public class CurrentUser {
     public static Integer getUserId() {
         return getUserDetails().getUserId();
     }
+
+    
 }

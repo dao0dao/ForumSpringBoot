@@ -8,4 +8,6 @@ public interface AuthorizationsService {
     Boolean registerUser(String email, String password, String confirmPassword);
 
     String refreshToken();
+
+    void logoutUser();
 }

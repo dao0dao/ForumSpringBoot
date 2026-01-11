@@ -18,11 +18,9 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
 
     @Modifying
     @Query(value = "INSERT INTO posts_likes (user_id, post_id) VALUES (:userId, :postId) On CONFLICT DO NOTHING", nativeQuery = true)
-    @Transactional
     void addLIke(@Param("userId") Integer userId, @Param("postId") Integer postId);
     
     @Modifying
     @Query(value = "DELETE FROM posts_likes WHERE user_id = :userId AND post_id = :postId", nativeQuery = true)
-    @Transactional
     void deleteLike(@Param("userId") Integer userId, @Param("postId") Integer postId);
 }

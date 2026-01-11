@@ -25,6 +25,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @Service
 @AllArgsConstructor
@@ -100,12 +101,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostSearchDTO> findAllPosts(Pageable pageable) {
+    public Page<PostSearchDTO> findAllPosts(@NonNull Pageable pageable) {
         return this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
     }
 
     @Override
-    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, Pageable pageable) {
+    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, @NonNull Pageable pageable) {
         Specification<Post> specification = new PostSearchCriteria(request);
         return this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
     }

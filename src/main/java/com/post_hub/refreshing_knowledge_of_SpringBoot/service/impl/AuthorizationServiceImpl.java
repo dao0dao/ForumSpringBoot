@@ -92,4 +92,9 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
         return jwtTokenProvider.generateToken(userDetails);
     }
 
+    @Override
+    public void logoutUser() {
+        SecurityContextHolder.clearContext();
+    }
+
 }
