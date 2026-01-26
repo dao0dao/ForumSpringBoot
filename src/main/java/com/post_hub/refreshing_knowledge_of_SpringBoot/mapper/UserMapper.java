@@ -24,7 +24,7 @@ public class UserMapper {
                 .deleted(user.getDeleted())
                 .id(user.getId())
                 .lastLogin(user.getLastLogin())
-                .registration_status(user.getRegistration_status())
+                .registration_status(user.getRegistrationStatus())
                 .roles(roles)
                 .updated(user.getUpdated())
                 .username(user.getUsername())

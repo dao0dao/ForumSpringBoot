@@ -66,9 +66,9 @@ public class User {
     private LocalDateTime updated = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "registration_status")
     @Builder.Default()
-    private RegistrationStatus registration_status = RegistrationStatus.INACTIVE;
+    private RegistrationStatus registrationStatus = RegistrationStatus.INACTIVE;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;

@@ -10,6 +10,8 @@ public enum UserRole {
     ADMIN("ADMIN"),
     USER("USER");
 
+    public static final String DEFAULT = "USER";
+
     private final String role;
 
     public static UserRole fromName (String name){

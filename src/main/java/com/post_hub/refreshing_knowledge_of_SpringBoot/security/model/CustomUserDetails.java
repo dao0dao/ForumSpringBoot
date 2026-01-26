@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.RegistrationStatus;
 
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String userEmail;
     private String password;
+    private RegistrationStatus registrationStatus;
     private List<SimpleGrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
@@ -26,6 +28,7 @@ public class CustomUserDetails implements UserDetails {
         this.password = user.getPassword();
         this.authorities = user.getRoles().stream().filter(role -> role.getActive())
                 .map(role -> new SimpleGrantedAuthority(role.getName())).toList();
+        this.registrationStatus = user.getRegistrationStatus();
     }
 
     @Override
@@ -33,6 +36,9 @@ public class CustomUserDetails implements UserDetails {
         return this.authorities;
     }
 
-    
+    @Override
+    public boolean isEnabled(){
+        return this.registrationStatus == RegistrationStatus.ACTIVE;
+    }
 
 }

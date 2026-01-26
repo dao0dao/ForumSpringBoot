@@ -2,7 +2,6 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,12 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.filter.JwtRequestFilter;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.CustomUserDetailsService;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.constans.SecurityConstans;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -42,8 +38,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(AUTH_WHITELIST)
-                                .permitAll()
+                                .requestMatchers(AUTH_WHITELIST).permitAll()
                                 .anyRequest().authenticated())
                 .authenticationProvider(this.authenticationProvider())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

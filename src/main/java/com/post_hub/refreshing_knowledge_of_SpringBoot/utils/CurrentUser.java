@@ -28,5 +28,7 @@ public class CurrentUser {
         return getUserDetails().getUserId();
     }
 
-    
+    public static boolean isActive(){
+        return getUserDetails().isEnabled();
+    }
 }
