@@ -13,13 +13,13 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearch
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Post;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NoAccessException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.PostRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.criteria.PostSearchCriteria;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.validators.PostSecurityEvaluator;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
@@ -32,6 +32,7 @@ import lombok.NonNull;
 public class PostServiceImpl implements PostService {
     final private PostRepository postRepository;
     final private UserRepository userRepository;
+    final private PostSecurityEvaluator postSecurityEvaluator;
 
     @Override
     public PostDTO getById(@NotNull Integer id) {
@@ -60,9 +61,7 @@ public class PostServiceImpl implements PostService {
         Post updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
-        if (!updatedPost.getUser().getId().equals(userId)) {
-            throw new NoAccessException(ApiErrorMessage.USER_ACCESS_ERROR.getMessage(userId));
-        }
+        this.postSecurityEvaluator.verifyPostAccess(updatedPost);
 
         updatedPost.setTitle(request.getTitle());
         updatedPost.setContent(request.getContent());
@@ -96,6 +95,9 @@ public class PostServiceImpl implements PostService {
     public void softDeletePost(Integer id) {
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
+
+        this.postSecurityEvaluator.verifyPostAccess(post);
+
         post.setDeleted(true);
         this.postRepository.save(post);
     }

@@ -18,6 +18,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.payloads.P
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ActiveUser;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.PageBuilder;
 
 import jakarta.validation.Valid;
@@ -64,8 +65,7 @@ public class PostController {
             @Valid @RequestBody PostRequest post) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        // TODO when will be user validation remove this mock
-        Integer userId = 1;
+        var userId = CurrentUser.getUserId();
 
         var updatedPost = this.postService.updatePost(postId, post, userId);
         ApiResponse<PostDTO> response = ApiResponse.createSuccessful(updatedPost);
@@ -94,9 +94,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDTO>> createPost(@RequestBody @Valid PostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        // TODO when will be user validation remove this mock
-        Integer userId = 1;
-
+        Integer userId = CurrentUser.getUserId();
         var createdPost = this.postService.createPost(request, userId);
         ApiResponse<PostDTO> response = ApiResponse.createSuccessful(createdPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -144,7 +142,7 @@ public class PostController {
                         posts.getNumber(),
                         posts.getTotalPages()));
 
-        var response = ApiResponse.createSuccessful(payload);        
+        var response = ApiResponse.createSuccessful(payload);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
