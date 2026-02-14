@@ -18,9 +18,6 @@ public class AccessLevelAspect {
     public void checkAccessLevel(AccessLevel accessLevel) {
         var requiredRole = UserRole.fromName(accessLevel.requiredLevel());
 
-        System.out.println("=================================================");
-        System.out.println("Required role: " + requiredRole);
-
         if (requiredRole.getRole() == UserRole.USER.getRole()) {
             return;
         }

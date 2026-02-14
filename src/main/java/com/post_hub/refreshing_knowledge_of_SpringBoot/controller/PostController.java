@@ -15,12 +15,11 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRe
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.payloads.PaginationPayload;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.AccessLevel;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ActiveUser;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.PageBuilder;
 
-import jakarta.persistence.Access;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
+@ActiveUser
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${end.points.posts}")
