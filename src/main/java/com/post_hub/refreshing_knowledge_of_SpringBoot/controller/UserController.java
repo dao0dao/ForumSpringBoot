@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUserRequest;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.UpdateUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.AccessLevel;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.UserService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
 
     private final UserService userService;
-
+    
+    @AccessLevel(requiredLevel = "ADMIN")
     @GetMapping("${end.points.id}")
     public ResponseEntity<ApiResponse<UserDTO>> getUser(@PathVariable(name = "id") Integer userId) {
 
@@ -47,6 +52,15 @@ public class UserController {
         UserDTO userDTO = this.userService.createUser(request);
         ApiResponse<UserDTO> apiResponse = ApiResponse.createSuccessful(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+    @PatchMapping("${end.points.id}")
+    public ResponseEntity<ApiResponse<UserDTO>> updateUser(@PathVariable(name = "id") Integer userId, @RequestBody @Valid UpdateUserRequest request) {
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+
+        UserDTO userDTO = this.userService.updateUser(userId, request);
+        ApiResponse<UserDTO> apiResponse = ApiResponse.createSuccessful(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
 }

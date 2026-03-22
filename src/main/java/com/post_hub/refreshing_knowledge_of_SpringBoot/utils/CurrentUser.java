@@ -3,6 +3,7 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.utils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NoAuthorizationException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.CustomUserDetails;
 
@@ -28,7 +29,18 @@ public class CurrentUser {
         return getUserDetails().getUserId();
     }
 
-    public static boolean isActive(){
+    public static boolean isActive() {
         return getUserDetails().isEnabled();
+    }
+
+    public static boolean isAdmin() {
+        return getUserDetails().getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals(UserRole.ADMIN.getRole())
+                        || role.getAuthority().equals(UserRole.SUPER_ADMIN.getRole()));
+    }
+
+    public static boolean isSuperAdmin() {
+        return getUserDetails().getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals(UserRole.SUPER_ADMIN.getRole()));
     }
 }
