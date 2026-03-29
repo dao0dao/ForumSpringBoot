@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.PostMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
@@ -28,6 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
     final private PostRepository postRepository;

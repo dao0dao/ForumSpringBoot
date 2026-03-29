@@ -22,8 +22,10 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
