@@ -33,7 +33,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class Post {
+public class PostEntity {
     public static final String ID_FIELD = "id";
     public static final String TITLE_FIELD = "title";
     public static final String CONTENT_FIElD = "content";
@@ -67,11 +67,11 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
     @Builder.Default()
-    private Set<User> likedBy = new HashSet<>();
+    private Set<UserEntity> likedBy = new HashSet<>();
 
     @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
     @Builder.Default()

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Role;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.RoleEntity;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.InvalidDataException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getById(@NotNull Integer userId) {
-        User user = this.userRepository.findById(userId)
+        UserEntity user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
         return UserMapper.toDTO(user);
@@ -62,20 +62,20 @@ public class UserServiceImpl implements UserService {
                     "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit");
         }
 
-        User user = UserMapper.toEntity(newUserRequest);
+        UserEntity user = UserMapper.toEntity(newUserRequest);
 
 
         if (this.userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
             throw new DataExistException("User already exist");
         }
 
-        Role role = this.roleRepository.findByName(newUserRequest.getUserRole().toUpperCase()).orElseThrow(
+        RoleEntity role = this.roleRepository.findByName(newUserRequest.getUserRole().toUpperCase()).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.ROLE_ERROR.getMessage((newUserRequest.getUserRole()))));
 
         user.setRoles(List.of(role));
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
-        User savedUser = this.userRepository.save(user);
+        UserEntity savedUser = this.userRepository.save(user);
         return UserMapper.toDTO(savedUser);
     }
 
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
             throw new DataExistException("Username or email already exist");
         }
 
-        User user = this.userRepository.findById(userId)
+        UserEntity user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
         user.setUsername(!newUserRequest.getUsername().isBlank() ? newUserRequest.getUsername() : user.getUsername());

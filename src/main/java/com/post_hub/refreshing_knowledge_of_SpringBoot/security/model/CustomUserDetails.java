@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.RegistrationStatus;
 
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
     private RegistrationStatus registrationStatus;
     private List<SimpleGrantedAuthority> authorities;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(UserEntity user) {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.userEmail = user.getEmail();

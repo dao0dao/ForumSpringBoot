@@ -3,7 +3,7 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.security.validators;
 import org.springframework.stereotype.Component;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Post;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NoAccessException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class PostSecurityEvaluator {
-    public void verifyPostAccess(Post post) {
+    public void verifyPostAccess(PostEntity post) {
         var userId = CurrentUser.getUserId();
         var userDetails = CurrentUser.getUserDetails();
 

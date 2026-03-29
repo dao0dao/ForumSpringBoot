@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUserRequest;
 
 public class UserMapper {
-    public static UserDTO toDTO(User user) {
+    public static UserDTO toDTO(UserEntity user) {
         if (user == null) {
             return null;
         }
@@ -31,19 +31,19 @@ public class UserMapper {
                 .build();
     }
 
-    public static User toEntity(NewUserRequest request) {
+    public static UserEntity toEntity(NewUserRequest request) {
         if (request == null) {
             return null;
         }
-        return User.builder()
+        return UserEntity.builder()
                 .email(request.getEmail().toLowerCase())
                 .password(request.getPassword())
                 .username(request.getUsername().toLowerCase())
                 .build();
     }
 
-    public static User toEntity(String email, String password) {
-        return User.builder()
+    public static UserEntity toEntity(String email, String password) {
+        return UserEntity.builder()
                 .email(email)
                 .password(password)
                 .username(email)

@@ -11,8 +11,8 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.PostMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearchDTO;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Post;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getById(@NotNull Integer id) {
-        Post post = this.postRepository.findByIdAndDeletedFalse(id)
+        PostEntity post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         return PostMapper.toDTO(post);
@@ -49,18 +49,18 @@ public class PostServiceImpl implements PostService {
         if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
-        User user = this.userRepository.findById(userId).orElseThrow(
+        UserEntity user = this.userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
-        Post post = PostMapper.toEntity(request, user);
+        PostEntity post = PostMapper.toEntity(request, user);
 
-        Post savedPost = this.postRepository.save(post);
+        PostEntity savedPost = this.postRepository.save(post);
         return PostMapper.toDTO(savedPost);
     }
 
     @Override
     public PostDTO updatePost(@NotNull Integer id, PostRequest request, @NotNull Integer userId) {
-        Post updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
+        PostEntity updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         this.postSecurityEvaluator.verifyPostAccess(updatedPost);
@@ -111,7 +111,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostSearchDTO> searchPosts(PostSearchRequest request, @NonNull Pageable pageable) {
-        Specification<Post> specification = new PostSearchCriteria(request);
+        Specification<PostEntity> specification = new PostSearchCriteria(request);
         return this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
     }
 

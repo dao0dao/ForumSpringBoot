@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Post;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -18,38 +18,38 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class PostSearchCriteria implements Specification<Post> {
+public class PostSearchCriteria implements Specification<PostEntity> {
     private final PostSearchRequest request;
 
     @Override
     @Nullable
     public Predicate toPredicate(
-            @NonNull Root<Post> root,
+            @NonNull Root<PostEntity> root,
             @Nullable CriteriaQuery<?> query,
             @NonNull CriteriaBuilder criteriaBuilder) {
 
         List<Predicate> predicates = new ArrayList<>();
 
         if (Objects.nonNull(request.getTitle())) {
-            predicates.add(criteriaBuilder.like(root.get(Post.TITLE_FIELD), "%" + request.getTitle() + "%"));
+            predicates.add(criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), "%" + request.getTitle() + "%"));
         }
 
         if (Objects.nonNull(request.getContent())) {
-            predicates.add(criteriaBuilder.like(root.get(Post.CONTENT_FIElD), "%" + request.getContent() + "%"));
+            predicates.add(criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), "%" + request.getContent() + "%"));
         }
 
         if (Objects.nonNull(request.getLikes())) {
-            predicates.add(criteriaBuilder.equal(root.get(Post.LIKES_FIELD), request.getLikes()));
+            predicates.add(criteriaBuilder.equal(root.get(PostEntity.LIKES_FIELD), request.getLikes()));
         }
 
         if (Objects.nonNull(request.getDeleted())) {
-            predicates.add(criteriaBuilder.equal(root.get(Post.DELETED_FIELD), request.getDeleted()));
+            predicates.add(criteriaBuilder.equal(root.get(PostEntity.DELETED_FIELD), request.getDeleted()));
         }
 
         if (Objects.nonNull(request.getKeywords())) {
             Predicate keywordsPredicate = criteriaBuilder.or(
-                    criteriaBuilder.like(root.get(Post.TITLE_FIELD), "%" + request.getKeywords() + "%"),
-                    criteriaBuilder.like(root.get(Post.CONTENT_FIElD), "%" + request.getKeywords() + "%"));
+                    criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), "%" + request.getKeywords() + "%"),
+                    criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), "%" + request.getKeywords() + "%"));
             predicates.add(keywordsPredicate);
         }
         

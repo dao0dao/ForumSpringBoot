@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Post;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
 
-public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
+public interface PostRepository extends JpaRepository<PostEntity, Integer>, JpaSpecificationExecutor<PostEntity> {
     boolean existsByTitle(String title);
 
-    Optional<Post> findByIdAndDeletedFalse(Integer id);
+    Optional<PostEntity> findByIdAndDeletedFalse(Integer id);
 
     @Modifying
     @Query(value = "INSERT INTO posts_likes (user_id, post_id) VALUES (:userId, :postId) On CONFLICT DO NOTHING", nativeQuery = true)

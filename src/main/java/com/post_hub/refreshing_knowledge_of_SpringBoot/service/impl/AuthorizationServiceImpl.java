@@ -13,8 +13,8 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserProfileMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiConstans;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserProfileDTO;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.Role;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.User;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.RoleEntity;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
@@ -74,9 +74,9 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
         }
 
         password = this.passwordEncoder.encode(password);
-        User user = UserMapper.toEntity(email, password);
+        UserEntity user = UserMapper.toEntity(email, password);
 
-        Role role = this.roleRepository.findByName(UserRole.USER.getRole()).orElseThrow(
+        RoleEntity role = this.roleRepository.findByName(UserRole.USER.getRole()).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.ROLE_ERROR.getMessage((UserRole.USER.getRole()))));
 
         user.setRoles(List.of(role));
