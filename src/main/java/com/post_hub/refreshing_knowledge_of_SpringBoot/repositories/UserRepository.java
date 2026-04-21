@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Optional<UserEntity> findByEmailAndDeletedFalse(String email);
 
-    @Query("SELECT COUNT(u) > 0 FROM User u WHERE (u.username = :username OR u.email = :email) AND u.id <> :id")
+    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE (u.username = :username OR u.email = :email) AND u.id <> :id")
     boolean existsByUsernameOrEmailAndIdNot(
             @Param("username") String username,
             @Param("email") String email,
