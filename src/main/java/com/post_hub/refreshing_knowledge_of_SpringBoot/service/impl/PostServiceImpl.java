@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO createPost(@NotNull PostRequest request, @NotNull Integer userId) {
+    public PostDTO createPost(@NotNull PostRequest request, @NonNull Integer userId) {
         if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
@@ -54,6 +54,7 @@ public class PostServiceImpl implements PostService {
 
         PostEntity post = PostMapper.toEntity(request, user);
 
+        @SuppressWarnings("null")
         PostEntity savedPost = this.postRepository.save(post);
         return PostMapper.toDTO(savedPost);
     }

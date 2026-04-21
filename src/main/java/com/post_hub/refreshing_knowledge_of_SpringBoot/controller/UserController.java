@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.enums.UserRole;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.UpdateUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
@@ -15,6 +14,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class UserController {
     
     @AccessLevel(requiredLevel = "ADMIN")
     @GetMapping("${end.points.id}")
-    public ResponseEntity<ApiResponse<UserDTO>> getUser(@PathVariable(name = "id") Integer userId) {
+    public ResponseEntity<ApiResponse<UserDTO>> getUser(@NonNull @PathVariable(name = "id") Integer userId) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("${end.points.create}")
-    public ResponseEntity<ApiResponse<UserDTO>> createUser(@RequestBody @Valid NewUserRequest request) {
+    public ResponseEntity<ApiResponse<UserDTO>> createUser(@NonNull @RequestBody @Valid NewUserRequest request) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PatchMapping("${end.points.id}")
-    public ResponseEntity<ApiResponse<UserDTO>> updateUser(@PathVariable(name = "id") Integer userId, @RequestBody @Valid UpdateUserRequest request) {
+    public ResponseEntity<ApiResponse<UserDTO>> updateUser(@NonNull @PathVariable(name = "id") Integer userId, @NonNull @RequestBody @Valid UpdateUserRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         UserDTO userDTO = this.userService.updateUser(userId, request);

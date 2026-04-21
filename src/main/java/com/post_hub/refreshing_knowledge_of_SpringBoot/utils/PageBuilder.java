@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort.Order;
 
 public class PageBuilder {
 
+    @SuppressWarnings("null")
     public static Pageable getPageable(Integer page, Integer limit, ArrayList<String> sortsBy) {
         ArrayList<Order> orders = new ArrayList<>();
 

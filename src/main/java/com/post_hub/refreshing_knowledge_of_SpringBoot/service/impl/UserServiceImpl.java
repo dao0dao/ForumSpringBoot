@@ -2,6 +2,7 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.service.impl;
 
 import java.util.List;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,6 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserReposito
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.UserService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getById(@NotNull Integer userId) {
+    public UserDTO getById(@NonNull Integer userId) {
         UserEntity user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO createUser(NewUserRequest newUserRequest) {
+    public UserDTO createUser(@NonNull NewUserRequest newUserRequest) {
         var currentUser = CurrentUser.isExist();
 
         if (currentUser) {
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(int userId, UpdateUserRequest newUserRequest) {
+    public UserDTO updateUser(@NonNull Integer userId, @NonNull UpdateUserRequest newUserRequest) {
         var currentUserId = CurrentUser.getUserId();
 
         if (userId != currentUserId && !CurrentUser.isSuperAdmin()) {

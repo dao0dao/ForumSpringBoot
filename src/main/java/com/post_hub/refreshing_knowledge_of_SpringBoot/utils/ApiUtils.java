@@ -4,6 +4,8 @@ import org.springframework.http.ResponseCookie;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiConstans;
 
+import lombok.NonNull;
+
 
 public class ApiUtils {
     public static String getMethodName() {
@@ -14,7 +16,7 @@ public class ApiUtils {
         }
     }
 
-    public static String createCookie(String cookieName, String cookieValue) {
+    public static String createCookie(@NonNull String cookieName, String cookieValue) {
         Integer maxAge = cookieValue.isEmpty() ? 0 : 24 * 60 * 60;
         return ResponseCookie.from(cookieName)
                 .httpOnly(true)
