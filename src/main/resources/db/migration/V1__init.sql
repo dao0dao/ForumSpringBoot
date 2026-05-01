@@ -6,5 +6,3 @@ CREATE TABLE posts (
     likes INTEGER NOT NULL DEFAULT 0,
     UNIQUE(title)
 );
-
-INSERT INTO posts(title, content, created, likes) VALUES ('First Post', 'This is first content', current_timestamp, 1);

@@ -6,12 +6,6 @@ CREATE TABLE roles (
     created_by VARCHAR(50) NOT NULL
 );
 
-INSERT INTO roles (name, user_system_name, created_by) VALUES 
-    ('SUPER_ADMIN', 'SUPER_ADMIN', 'SUPER_ADMIN'),
-    ('ADMIN', 'ADMIN', 'SUPER_ADMIN'),
-    ('USER', 'USER', 'SUPER_ADMIN')
-;
-
 CREATE Table users_roles (
     user_id INT NOT NULL,
     role_id INT NOT NULL,
