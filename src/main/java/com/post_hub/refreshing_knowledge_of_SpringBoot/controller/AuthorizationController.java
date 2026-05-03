@@ -63,7 +63,6 @@ public class AuthorizationController {
 
     @PostMapping("${end.points.logout}")
     public ResponseEntity<Void> logout() {
-        System.out.println("==============================================User logged out successfully.");
         this.authorizationsService.logoutUser();
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, ApiUtils.deleteCookie(SecurityConstans.JWT_COOKIE_NAME))
