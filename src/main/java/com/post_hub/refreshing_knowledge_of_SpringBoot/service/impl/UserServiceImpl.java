@@ -18,6 +18,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUse
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.UpdateUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.RoleRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.policy.UserAccessPolicy;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.UserService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
     final private PasswordEncoder passwordEncoder;
     final private RoleRepository roleRepository;
+    final private UserAccessPolicy userAccessPolicy;
 
     private Boolean isPasswordValid(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*")
@@ -39,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getById(@NonNull Integer userId) {
+        if (!this.userAccessPolicy.hasAccess(userId)) {
+            throw new NotFoundException("Permission denied");
+        }
         UserEntity user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 
@@ -53,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new DataExistException("You are already logged in");
         }
 
-        if(!newUserRequest.getPassword().equals(newUserRequest.getConfirmPassword())) {
+        if (!newUserRequest.getPassword().equals(newUserRequest.getConfirmPassword())) {
             throw new InvalidDataException("Passwords do not match");
         }
 
@@ -63,7 +68,6 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity user = UserMapper.toEntity(newUserRequest);
-
 
         if (this.userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail())) {
             throw new DataExistException("User already exist");
@@ -81,20 +85,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(@NonNull Integer userId, @NonNull UpdateUserRequest newUserRequest) {
-        var currentUserId = CurrentUser.getUserId();
-
-        if (userId != currentUserId && !CurrentUser.isSuperAdmin()) {
+        if (!this.userAccessPolicy.hasAccess(userId)) {
             throw new NotFoundException("Permission denied");
         }
 
-        if(!newUserRequest.getPassword().equals(newUserRequest.getConfirmPassword())){
+        if (!newUserRequest.getPassword().equals(newUserRequest.getConfirmPassword())) {
             throw new InvalidDataException("Passwords do not match");
         }
 
-        if(!this.isPasswordValid(newUserRequest.getPassword())){
+        if (!this.isPasswordValid(newUserRequest.getPassword())) {
             throw new InvalidDataException(
                     "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit");
         }
+        
+        var currentUserId = CurrentUser.getUserId();
 
         var existedDifferentUser = this.userRepository.existsByUsernameOrEmailAndIdNot(newUserRequest.getUsername(),
                 newUserRequest.getEmail(), currentUserId);

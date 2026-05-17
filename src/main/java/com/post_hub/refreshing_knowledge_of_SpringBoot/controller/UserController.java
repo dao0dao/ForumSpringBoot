@@ -33,17 +33,17 @@ public class UserController {
 
     private final UserService userService;
     
-    @AccessLevel(requiredLevel = "ADMIN")
     @GetMapping("${end.points.id}")
     public ResponseEntity<ApiResponse<UserDTO>> getUser(@NonNull @PathVariable(name = "id") Integer userId) {
-
+        
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-
+        
         UserDTO userDTO = this.userService.getById(userId);
         ApiResponse<UserDTO> apiResponse = ApiResponse.createSuccessful(userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
-
+    
+    @AccessLevel(requiredLevel = "SUPER_ADMIN")
     @PostMapping("${end.points.create}")
     public ResponseEntity<ApiResponse<UserDTO>> createUser(@NonNull @RequestBody @Valid NewUserRequest request) {
 
