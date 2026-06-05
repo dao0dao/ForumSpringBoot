@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
     final private PasswordEncoder passwordEncoder;
     final private RoleRepository roleRepository;
-    final private UserAccessPolicy userAccessPolicy;
 
     private Boolean isPasswordValid(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*") && password.matches(".*[a-z].*")
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getById(@NonNull Integer userId) {
-        if (!this.userAccessPolicy.hasAccess(userId)) {
+        if (!UserAccessPolicy.hasAccess(userId)) {
             throw new NotFoundException("Permission denied");
         }
         UserEntity user = this.userRepository.findById(userId)
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(@NonNull Integer userId, @NonNull UpdateUserRequest newUserRequest) {
-        if (!this.userAccessPolicy.hasAccess(userId)) {
+        if (!UserAccessPolicy.hasAccess(userId)) {
             throw new NotFoundException("Permission denied");
         }
 

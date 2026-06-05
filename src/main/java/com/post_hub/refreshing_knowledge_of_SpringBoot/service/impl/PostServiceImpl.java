@@ -20,13 +20,11 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSe
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.PostRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.criteria.PostSearchCriteria;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.security.validators.PostSecurityEvaluator;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.policy.PostAccessPolicy;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 
 @Service
 @Validated
@@ -34,10 +32,9 @@ import lombok.NonNull;
 public class PostServiceImpl implements PostService {
     final private PostRepository postRepository;
     final private UserRepository userRepository;
-    final private PostSecurityEvaluator postSecurityEvaluator;
 
     @Override
-    public PostDTO getById(@NotNull Integer id) {
+    public PostDTO getById(Integer id) {
         PostEntity post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
@@ -45,7 +42,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO createPost(@NotNull PostRequest request, @NonNull Integer userId) {
+    public PostDTO createPost(PostRequest request, Integer userId) {
         if (this.postRepository.existsByTitle(request.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
         }
@@ -60,22 +57,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO updatePost(@NotNull Integer id, PostRequest request, @NotNull Integer userId) {
-        PostEntity updatedPost = this.postRepository.findByIdAndDeletedFalse(id)
+    public PostDTO updatePost(Integer id, PostRequest request, Integer userId) {
+        PostEntity postToUpdate = this.postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
-        this.postSecurityEvaluator.verifyPostAccess(updatedPost);
+        PostAccessPolicy.verifyPostAccess(postToUpdate);
 
-        updatedPost.setTitle(request.getTitle());
-        updatedPost.setContent(request.getContent());
+        postToUpdate.setTitle(request.getTitle());
+        postToUpdate.setContent(request.getContent());
 
-        this.postRepository.save(updatedPost);
-        return PostMapper.toDTO(updatedPost);
+        this.postRepository.save(postToUpdate);
+        return PostMapper.toDTO(postToUpdate);
     }
 
     @Override
     @Transactional
-    public PostDTO likePost(@NotNull Integer id) {
+    public PostDTO likePost(Integer id) {
         var userId = CurrentUser.getUserId();
         this.postRepository.addLIke(userId, id);
         var post = this.postRepository.findByIdAndDeletedFalse(id)
@@ -85,7 +82,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO dislikePost(@NotNull Integer id) {
+    public PostDTO dislikePost(Integer id) {
         var userId = CurrentUser.getUserId();
         this.postRepository.deleteLike(userId, id);
         var post = this.postRepository.findByIdAndDeletedFalse(id)
@@ -99,19 +96,19 @@ public class PostServiceImpl implements PostService {
         var post = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
-        this.postSecurityEvaluator.verifyPostAccess(post);
+        PostAccessPolicy.verifyPostAccess(post);
 
         post.setDeleted(true);
         this.postRepository.save(post);
     }
 
     @Override
-    public Page<PostSearchDTO> findAllPosts(@NonNull Pageable pageable) {
+    public Page<PostSearchDTO> findAllPosts(Pageable pageable) {
         return this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
     }
 
     @Override
-    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, @NonNull Pageable pageable) {
+    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, Pageable pageable) {
         Specification<PostEntity> specification = new PostSearchCriteria(request);
         return this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
     }

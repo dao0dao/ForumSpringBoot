@@ -9,16 +9,16 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearch
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
 
-import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotNull;
 
 public interface PostService {
 
-    PostDTO getById(@Nonnull Integer id);
-    PostDTO createPost(@Nonnull PostRequest post, @Nonnull Integer userId);
-    PostDTO updatePost(@Nonnull Integer id, @Nonnull PostRequest post, @Nonnull Integer userId);
-    PostDTO likePost(@Nonnull Integer id);
-    PostDTO dislikePost(@Nonnull Integer id);
-    void softDeletePost(@Nonnull Integer id);
+    PostDTO getById(@NotNull Integer id);
+    PostDTO createPost(@NotNull PostRequest post, @NotNull Integer userId);
+    PostDTO updatePost(@NotNull Integer id, @NotNull PostRequest post, @NotNull Integer userId);
+    PostDTO likePost(@NotNull Integer id);
+    PostDTO dislikePost(@NotNull Integer id);
+    void softDeletePost(@NotNull Integer id);
     Page<PostSearchDTO> findAllPosts(Pageable pageable);
-    Page<PostSearchDTO> searchPosts(@Nonnull PostSearchRequest request, Pageable pageable);
+    Page<PostSearchDTO> searchPosts(@NotNull PostSearchRequest request, Pageable pageable);
 }
