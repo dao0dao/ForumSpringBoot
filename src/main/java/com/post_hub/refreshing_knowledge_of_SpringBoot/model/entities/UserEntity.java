@@ -57,6 +57,10 @@ public class UserEntity {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Builder.Default()
+    private List<CommentEntity> comments = new ArrayList<>();
+
     @Column(nullable = false)
     @Builder.Default()
     private LocalDateTime created = LocalDateTime.now();
