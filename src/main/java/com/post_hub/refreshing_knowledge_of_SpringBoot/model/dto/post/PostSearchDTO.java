@@ -2,6 +2,9 @@ package com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.comment.CommentDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +24,6 @@ public class PostSearchDTO implements Serializable {
     private LocalDateTime created;
     private LocalDateTime updated;
     private Boolean isDeleted;
+    private List<CommentDTO> comments;
+
 }

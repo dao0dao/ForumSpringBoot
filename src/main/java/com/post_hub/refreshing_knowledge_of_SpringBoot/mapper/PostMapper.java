@@ -1,5 +1,8 @@
 package com.post_hub.refreshing_knowledge_of_SpringBoot.mapper;
 
+import java.util.List;
+
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.comment.CommentDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearchDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
@@ -20,6 +23,13 @@ public class PostMapper {
         if (post == null) {
             return null;
         }
+
+        List<CommentDTO> comments = null;
+        if (post.getComments() != null) {
+            comments = post.getComments().stream().map(comment -> CommentMapper.toDTO(comment)).toList();
+
+        }
+
         return PostDTO.builder()
                 .content(post.getContent())
                 .created(post.getCreated())
@@ -27,6 +37,7 @@ public class PostMapper {
                 .likes(post.getLikesCount())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
+                .comments(comments)
                 .build();
     }
 
@@ -34,6 +45,13 @@ public class PostMapper {
         if (post == null) {
             return null;
         }
+
+        List<CommentDTO> comments = null;
+        if (post.getComments() != null) {
+            comments = post.getComments().stream().map(comment -> CommentMapper.toDTO(comment)).toList();
+
+        }
+
         return PostSearchDTO.builder()
                 .content(post.getContent())
                 .created(post.getCreated())
@@ -42,6 +60,7 @@ public class PostMapper {
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .isDeleted(post.getDeleted())
+                .comments(comments)
                 .build();
     }
 }
