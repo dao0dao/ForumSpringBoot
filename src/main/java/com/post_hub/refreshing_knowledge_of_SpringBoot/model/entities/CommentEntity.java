@@ -31,10 +31,12 @@ public class CommentEntity {
     private Integer id;
 
     @Column()
-    private LocalDateTime created;
+    @Builder.Default()
+    private LocalDateTime created = LocalDateTime.now();
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    @Builder.Default()
+    private Boolean isDeleted = false;
 
     @Column(nullable = false, length = 500)
     private String message;

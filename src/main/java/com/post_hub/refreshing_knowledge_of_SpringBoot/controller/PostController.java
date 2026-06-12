@@ -99,16 +99,7 @@ public class PostController {
         var createdPost = this.postService.createPost(request, userId);
         ApiResponse<PostDTO> response = ApiResponse.createSuccessful(createdPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PostMapping("${end.points.id}${end.points.comment}")
-    public ResponseEntity<ApiResponse<CommentDTO>> createComment(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        
-        return null;
-    }
-    
+    }    
 
     @GetMapping("${end.points.all}")
     public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getAllPosts(
