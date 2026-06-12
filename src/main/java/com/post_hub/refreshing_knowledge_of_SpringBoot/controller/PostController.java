@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.comment.CommentDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearchDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;

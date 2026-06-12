@@ -39,7 +39,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void softDeleteComment(Integer commentId) {
+        var comment = this.commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.COMMENT_ERROR_BY_ID.getMessage(commentId)));
 
+        comment.setIsDeleted(true);
+        this.commentRepository.save(comment);
+        
     }
 
 }
