@@ -41,7 +41,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping("${end.points.comment}${end.points.id}")
+    @DeleteMapping("${end.points.comment}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable(name = "id") Integer commentId) {
 
