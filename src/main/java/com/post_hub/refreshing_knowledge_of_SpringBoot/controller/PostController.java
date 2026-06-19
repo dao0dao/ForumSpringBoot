@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
@@ -16,6 +15,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSe
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.payloads.PaginationPayload;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ActiveUser;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ApiController;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.PostService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @ActiveUser
-@RestController
+@ApiController
 @RequiredArgsConstructor
 @RequestMapping("${end.points.posts}")
 public class PostController {

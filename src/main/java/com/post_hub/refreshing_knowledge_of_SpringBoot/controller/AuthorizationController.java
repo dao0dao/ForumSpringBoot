@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserProfileDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.authorization.LoginRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.authorization.RegisterRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ApiController;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.constans.SecurityConstans;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.AuthorizationsService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.models.AuthResult;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestController
+@ApiController
 @RequiredArgsConstructor
 @RequestMapping()
 public class AuthorizationController {

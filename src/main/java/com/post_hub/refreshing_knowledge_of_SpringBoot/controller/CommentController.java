@@ -1,12 +1,12 @@
 package com.post_hub.refreshing_knowledge_of_SpringBoot.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.comment.CommentDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.comment.CommentRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ActiveUser;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ApiController;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.CommentService;
 
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @ActiveUser
-@RestController
+@ApiController
 @RequiredArgsConstructor
 @RequestMapping("${end.points.posts}${end.points.id}")
 public class CommentController {

@@ -9,6 +9,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUse
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.UpdateUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.AccessLevel;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ApiController;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.UserService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.ApiUtils;
 
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
-@RestController
+@ApiController
 @RequestMapping("${end.points.users}")
 @AllArgsConstructor
 public class UserController {
