@@ -1,7 +1,6 @@
 package com.post_hub.refreshing_knowledge_of_SpringBoot.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
