@@ -144,7 +144,7 @@ public class PostController {
 
         var response = ApiResponse.createSuccessful(payload);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

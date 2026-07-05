@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class PostSearchDTO implements Serializable {
 
     private Integer id;
+    private String authorName;
     private String title;
     private String content;
     private Integer likes;

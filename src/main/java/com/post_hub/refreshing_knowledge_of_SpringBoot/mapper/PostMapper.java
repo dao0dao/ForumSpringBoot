@@ -65,6 +65,7 @@ public class PostMapper {
         }
 
         return PostSearchDTO.builder()
+                .authorName(post.getUser().getUsername())
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
