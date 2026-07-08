@@ -57,7 +57,7 @@ public class AuthorizationController {
         }
 
         @GetMapping("${end.points.token}${end.points.refresh}")
-        public ResponseEntity<Void> getMethodName() {
+        public ResponseEntity<Void> getRefreshToken() {
                 String token = this.authorizationsService.refreshToken();
                 return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE,
@@ -71,6 +71,15 @@ public class AuthorizationController {
                 return ResponseEntity.status(HttpStatus.OK)
                                 .header(HttpHeaders.SET_COOKIE, ApiUtils.deleteCookie(SecurityConstans.JWT_COOKIE_NAME))
                                 .build();
+        }
+
+        @GetMapping("${end.points.user}${end.points.status}")
+        public ResponseEntity<ApiResponse<UserProfileDTO>> getUserStatus() {
+                log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
+
+                UserProfileDTO userProfileDTO = this.authorizationsService.getCurrentUser();
+                ApiResponse<UserProfileDTO> response = ApiResponse.createSuccessful(userProfileDTO);
+                return ResponseEntity.ok().body(response);
         }
 
 }
