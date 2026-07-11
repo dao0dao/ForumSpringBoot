@@ -7,8 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserMapper;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.mapper.UserProfileMapper;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiErrorMessage;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserDTO;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.user.UserProfileDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.RoleEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
@@ -18,6 +20,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.NewUse
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.user.UpdateUserRequest;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.RoleRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.security.model.CustomUserDetails;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.policy.UserAccessPolicy;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.service.UserService;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.utils.CurrentUser;
@@ -96,7 +99,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidDataException(
                     "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit");
         }
-        
+
         var currentUserId = CurrentUser.getUserId();
 
         var existedDifferentUser = this.userRepository.existsByUsernameOrEmailAndIdNot(newUserRequest.getUsername(),
@@ -115,6 +118,12 @@ public class UserServiceImpl implements UserService {
                 !newUserRequest.getPassword().isBlank() ? this.passwordEncoder.encode(newUserRequest.getPassword())
                         : user.getPassword());
         return UserMapper.toDTO(this.userRepository.save(user));
+    }
+
+    @Override
+    public UserProfileDTO getCurrentUser() {
+        CustomUserDetails userDetails = CurrentUser.getUserDetails();
+        return UserProfileMapper.toDto(userDetails);
     }
 
 }

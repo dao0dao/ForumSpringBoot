@@ -96,11 +96,4 @@ public class AuthorizationServiceImpl implements AuthorizationsService {
     public void logoutUser() {
         SecurityContextHolder.clearContext();
     }
-
-    @Override
-    public UserProfileDTO getCurrentUser() {
-        CustomUserDetails userDetails = CurrentUser.getUserDetails();
-        return UserProfileMapper.toDto(userDetails);
-    }
-
 }

@@ -72,14 +72,4 @@ public class AuthorizationController {
                                 .header(HttpHeaders.SET_COOKIE, ApiUtils.deleteCookie(SecurityConstans.JWT_COOKIE_NAME))
                                 .build();
         }
-
-        @GetMapping("${end.points.user}${end.points.status}")
-        public ResponseEntity<ApiResponse<UserProfileDTO>> getUserStatus() {
-                log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-
-                UserProfileDTO userProfileDTO = this.authorizationsService.getCurrentUser();
-                ApiResponse<UserProfileDTO> response = ApiResponse.createSuccessful(userProfileDTO);
-                return ResponseEntity.ok().body(response);
-        }
-
 }
