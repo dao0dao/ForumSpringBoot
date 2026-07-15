@@ -11,7 +11,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.constans.ApiLogMess
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearchDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchFilter;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.ApiResponse;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.response.payloads.PaginationPayload;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.security.annotation.ActiveUser;
@@ -100,15 +100,21 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }    
 
-    @GetMapping("${end.points.all}")
+    @GetMapping()
     public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> getAllPosts(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer limit,
-            @RequestParam(required = false) ArrayList<String> sortsBy) {
+            @RequestParam(required = false) ArrayList<String> sortsBy,
+            @RequestParam(defaultValue = "false") Boolean authorName,
+            @RequestParam(defaultValue = "false") Boolean title,
+            @RequestParam(defaultValue = "false") Boolean content,
+            @RequestParam(defaultValue = "") String keywords
+        ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         var pageable = PageBuilder.getPageable(page, limit, sortsBy);
-        Page<PostSearchDTO> postsListPage = this.postService.findAllPosts(pageable);
+        var postSearchFilter = new PostSearchFilter(authorName, title, content, keywords);
+        Page<PostSearchDTO> postsListPage = this.postService.searchPosts(postSearchFilter, pageable);
 
         PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
                 postsListPage.getContent(),
@@ -122,29 +128,4 @@ public class PostController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
-    @PostMapping("${end.points.search}")
-    public ResponseEntity<ApiResponse<PaginationPayload<PostSearchDTO>>> searchPost(
-            @RequestBody @Valid PostSearchRequest request,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer limit,
-            @RequestParam(required = false) ArrayList<String> sortsBy) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-
-        var pageable = PageBuilder.getPageable(page, limit, sortsBy);
-        var posts = this.postService.searchPosts(request, pageable);
-
-        PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(
-                posts.getContent(),
-                new PaginationPayload.Pagination(
-                        posts.getTotalElements(),
-                        pageable.getPageSize(),
-                        posts.getNumber(),
-                        posts.getTotalPages()));
-
-        var response = ApiResponse.createSuccessful(payload);
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
 }

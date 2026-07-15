@@ -28,13 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @ApiController
-@RequestMapping("${end.points.users}")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("${end.points.id}")
+    @GetMapping("${end.points.users}${end.points.id}")
     public ResponseEntity<ApiResponse<UserDTO>> getUser(@NonNull @PathVariable(name = "id") Integer userId) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
@@ -45,7 +44,7 @@ public class UserController {
     }
 
     @AccessLevel(requiredLevel = "SUPER_ADMIN")
-    @PostMapping("${end.points.create}")
+    @PostMapping("${end.points.users}${end.points.create}")
     public ResponseEntity<ApiResponse<UserDTO>> createUser(@NonNull @RequestBody @Valid NewUserRequest request) {
 
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
@@ -55,7 +54,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    @PatchMapping("${end.points.id}")
+    @PatchMapping("${end.points.users}${end.points.id}")
     public ResponseEntity<ApiResponse<UserDTO>> updateUser(@NonNull @PathVariable(name = "id") Integer userId,
             @NonNull @RequestBody @Valid UpdateUserRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());

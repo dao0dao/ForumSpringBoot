@@ -16,7 +16,7 @@ import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.DataExistException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.exception.NotFoundException;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchFilter;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.PostRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.UserRepository;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.repositories.criteria.PostSearchCriteria;
@@ -104,13 +104,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostSearchDTO> findAllPosts(Pageable pageable) {
-        return this.postRepository.findAll(pageable).map(PostMapper::toSearchDTO);
+        var currentUserId = CurrentUser.getUserId();
+        return this.postRepository.findAll(pageable).map(post -> PostMapper.toSearchDTO(post, currentUserId));
     }
 
     @Override
-    public Page<PostSearchDTO> searchPosts(PostSearchRequest request, Pageable pageable) {
+    public Page<PostSearchDTO> searchPosts(PostSearchFilter request, Pageable pageable) {
         Specification<PostEntity> specification = new PostSearchCriteria(request);
-        return this.postRepository.findAll(specification, pageable).map(PostMapper::toSearchDTO);
+        var currentUserId = CurrentUser.getUserId();
+        return this.postRepository.findAll(specification, pageable).map(post -> PostMapper.toSearchDTO(post, currentUserId));
     }
 
 }

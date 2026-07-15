@@ -36,7 +36,7 @@ public class PostMapper {
 
         }
 
-        return PostDTO.builder()
+        return PostDTO.builder()                
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
@@ -47,7 +47,7 @@ public class PostMapper {
                 .build();
     }
 
-    public static PostSearchDTO toSearchDTO(PostEntity post) {
+    public static PostSearchDTO toSearchDTO(PostEntity post, Integer currentUserId) {
         if (post == null) {
             return null;
         }
@@ -66,6 +66,7 @@ public class PostMapper {
 
         return PostSearchDTO.builder()
                 .authorName(post.getUser().getUsername())
+                .canEdit(post.getUser().getId().equals(currentUserId))
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())

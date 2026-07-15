@@ -25,6 +25,7 @@ public class PostSearchDTO implements Serializable {
     private LocalDateTime created;
     private LocalDateTime updated;
     private Boolean isDeleted;
+    private Boolean canEdit;
     private List<CommentDTO> comments;
 
 }

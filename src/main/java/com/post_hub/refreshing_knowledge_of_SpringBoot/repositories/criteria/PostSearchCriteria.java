@@ -9,17 +9,19 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.PostEntity;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.entities.UserEntity;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchFilter;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class PostSearchCriteria implements Specification<PostEntity> {
-    private final PostSearchRequest request;
+    private final PostSearchFilter request;
 
     @Override
     @Nullable
@@ -28,32 +30,35 @@ public class PostSearchCriteria implements Specification<PostEntity> {
             @Nullable CriteriaQuery<?> query,
             @NonNull CriteriaBuilder criteriaBuilder) {
 
-        List<Predicate> predicates = new ArrayList<>();
+        boolean hasKeywords = Objects.nonNull(request.getKeywords()) && !request.getKeywords().isBlank();
 
-        if (Objects.nonNull(request.getTitle())) {
-            predicates.add(criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), "%" + request.getTitle() + "%"));
+        if (!hasKeywords) {
+            return criteriaBuilder.conjunction();
         }
 
-        if (Objects.nonNull(request.getContent())) {
-            predicates.add(criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), "%" + request.getContent() + "%"));
+        var searchEverywhere = Boolean.FALSE.equals(request.getTitle()) && Boolean.FALSE.equals(request.getContent())
+                && Boolean.FALSE.equals(request.getAuthorName());
+
+        List<Predicate> keywordPredicates = new ArrayList<>();
+        String likePattern = "%" + request.getKeywords() + "%";
+
+        if (Boolean.TRUE.equals(request.getTitle()) || searchEverywhere) {
+            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), likePattern));
         }
 
-        if (Objects.nonNull(request.getLikes())) {
-            predicates.add(criteriaBuilder.equal(root.get(PostEntity.LIKES_FIELD), request.getLikes()));
+        if (Boolean.TRUE.equals(request.getContent()) || searchEverywhere) {
+            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), likePattern));
         }
 
-        if (Objects.nonNull(request.getDeleted())) {
-            predicates.add(criteriaBuilder.equal(root.get(PostEntity.DELETED_FIELD), request.getDeleted()));
+        if (Boolean.TRUE.equals(request.getAuthorName()) || searchEverywhere) {
+            Join<PostEntity, UserEntity> userJoin = root.join("user");
+            keywordPredicates.add(criteriaBuilder.like(userJoin.get("username"), likePattern));
         }
 
-        if (Objects.nonNull(request.getKeywords())) {
-            Predicate keywordsPredicate = criteriaBuilder.or(
-                    criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), "%" + request.getKeywords() + "%"),
-                    criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), "%" + request.getKeywords() + "%"));
-            predicates.add(keywordsPredicate);
+        if (keywordPredicates.isEmpty()) {
+            return criteriaBuilder.conjunction();
         }
-        
-        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+
+        return criteriaBuilder.or(keywordPredicates.toArray(new Predicate[0]));
     }
-
 }

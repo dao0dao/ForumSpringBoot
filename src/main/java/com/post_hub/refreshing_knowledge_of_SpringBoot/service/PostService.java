@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.dto.post.PostSearchDTO;
 import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostRequest;
-import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchRequest;
+import com.post_hub.refreshing_knowledge_of_SpringBoot.model.request.post.PostSearchFilter;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -20,5 +20,5 @@ public interface PostService {
     PostDTO dislikePost(@NotNull Integer id);
     void softDeletePost(@NotNull Integer id);
     Page<PostSearchDTO> findAllPosts(Pageable pageable);
-    Page<PostSearchDTO> searchPosts(@NotNull PostSearchRequest request, Pageable pageable);
+    Page<PostSearchDTO> searchPosts(@NotNull PostSearchFilter request, Pageable pageable);
 }
