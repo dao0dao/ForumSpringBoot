@@ -1,0 +1,31 @@
+package com.dao0dao.forumapiservice.model.dto.post;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import com.dao0dao.forumapiservice.model.dto.comment.CommentDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PostSearchDTO implements Serializable {
+
+    private Integer id;
+    private String authorName;
+    private String title;
+    private String content;
+    private Integer likes;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private Boolean isDeleted;
+    private Boolean canEdit;
+    private List<CommentDTO> comments;
+
+}

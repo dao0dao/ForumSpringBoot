@@ -9,10 +9,10 @@
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.post_hub</groupId>
-	<artifactId>refreshing_knowledge_of_SpringBoot</artifactId>
+	<groupId>com.dao0dao</groupId>
+	<artifactId>forum-api-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>refreshing_knowledge_of_SpringBoot</name>
+	<name>forum-api-service</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
@@ -68,7 +68,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-			<version>4.0.0-M1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -128,11 +127,11 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>local-ide</id>
+			<id>dev</id>
 			<properties>
-				<envName>local-ide</envName>
+				<envName>dev</envName>
 				<skipTest>true</skipTest>
-				<maven-properties.file>src/main/resources/application-local-idea.properties</maven-properties.file>
+				<maven-properties.file>src/main/resources/application-dev.properties</maven-properties.file>
 			</properties>
 		</profile>
 		<profile>

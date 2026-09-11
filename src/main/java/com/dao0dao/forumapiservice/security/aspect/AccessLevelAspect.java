@@ -1,0 +1,46 @@
+package com.dao0dao.forumapiservice.security.aspect;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
+
+import com.dao0dao.forumapiservice.model.enums.UserRole;
+import com.dao0dao.forumapiservice.model.exception.NoAccessException;
+import com.dao0dao.forumapiservice.security.annotation.AccessLevel;
+import com.dao0dao.forumapiservice.utils.CurrentUser;
+
+@Aspect
+@Component
+public class AccessLevelAspect {
+
+    @Before("@annotation(accessLevel)")
+    public void checkAccessLevel(AccessLevel accessLevel) {
+        var requiredRole = UserRole.fromName(accessLevel.requiredLevel());
+
+        if (requiredRole.getRole() == UserRole.USER.getRole()) {
+            return;
+        }
+
+        boolean isAdmin = false;
+        boolean isSuperAdmin = false;
+
+        var userRoles = CurrentUser.getUserDetails().getAuthorities();
+
+        for (GrantedAuthority authority : userRoles) {
+            if (authority.getAuthority().equals(UserRole.ADMIN.getRole())) {
+                isAdmin = true;
+            }
+            if (authority.getAuthority().equals(UserRole.SUPER_ADMIN.getRole())) {
+                isSuperAdmin = true;
+            }
+        }
+
+        if (requiredRole.getRole() == UserRole.SUPER_ADMIN.getRole() && !isSuperAdmin) {
+            throw new NoAccessException("Access denied: Super Admin level required");
+        }
+        if (requiredRole.getRole() == UserRole.ADMIN.getRole() && !isAdmin && !isSuperAdmin) {
+            throw new NoAccessException("Access denied: Admin level required");
+        }
+    }
+}
