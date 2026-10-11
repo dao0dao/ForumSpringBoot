@@ -44,8 +44,6 @@ public class PostMapper {
             return null;
         }
 
-        List<CommentDTO> comments = post.getComments().stream().map(CommentMapper::toDTO).toList();
-
         return PostSearchDTO.builder()
                 .authorName(post.getAuthor().getUsername())
                 .canEdit(post.getAuthor().getId().equals(currentUserId))
@@ -53,11 +51,11 @@ public class PostMapper {
                 .created(post.getCreated())
                 .id(post.getId())
                 .likes(post.getLikesCount())
+                .commentsCount(post.getCommentsCount())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .isDeleted(post.isDeleted())
                 .version(post.getVersion())
-                .comments(comments)
                 .build();
     }
 }

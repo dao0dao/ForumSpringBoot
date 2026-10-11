@@ -70,6 +70,9 @@ public class PostEntity {
     @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
     private int likesCount;
 
+    @Formula("(select count(*) from comments c where c.post_id = {alias}.id and c.is_deleted = false)")
+    private int commentsCount;
+
     @Builder
     private PostEntity(String title, String content, UserEntity author) {
         this.title = Objects.requireNonNull(title, "title");
