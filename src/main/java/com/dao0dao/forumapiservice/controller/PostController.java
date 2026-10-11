@@ -14,6 +14,7 @@ import com.dao0dao.forumapiservice.model.dto.post.PostSearchDTO;
 import com.dao0dao.forumapiservice.model.entities.PostEntity_;
 import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
+import com.dao0dao.forumapiservice.model.request.post.PostStatusFilter;
 import com.dao0dao.forumapiservice.model.response.ApiResponse;
 import com.dao0dao.forumapiservice.model.response.payloads.PaginationPayload;
 import com.dao0dao.forumapiservice.security.annotation.ActiveUser;
@@ -113,12 +114,13 @@ public class PostController {
             @RequestParam(defaultValue = "false") Boolean authorName,
             @RequestParam(defaultValue = "false") Boolean title,
             @RequestParam(defaultValue = "false") Boolean content,
-            @RequestParam(defaultValue = "") String keywords
+            @RequestParam(defaultValue = "") String keywords,
+            @RequestParam(defaultValue = "ALL") PostStatusFilter status
         ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         var pageable = PageBuilder.getPageable(page, limit, sortsBy, SORTABLE_FIELDS);
-        var postSearchFilter = new PostSearchFilter(authorName, title, content, keywords);
+        var postSearchFilter = new PostSearchFilter(authorName, title, content, keywords, status);
         Page<PostSearchDTO> postsListPage = this.postService.searchPosts(postSearchFilter, pageable);
 
         PaginationPayload<PostSearchDTO> payload = new PaginationPayload<>(

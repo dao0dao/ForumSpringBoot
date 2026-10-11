@@ -77,6 +77,9 @@ public class PostEntity {
     }
 
     public void update(String title, String content) {
+        if (this.deleted) {
+            throw new IllegalStateException("Deleted post cannot be edited");
+        }
         this.title = Objects.requireNonNull(title, "title");
         this.content = Objects.requireNonNull(content, "content");
     }

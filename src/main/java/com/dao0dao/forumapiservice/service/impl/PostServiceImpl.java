@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getById(Integer id) {
-        PostEntity post = this.postRepository.findByIdAndDeletedFalse(id)
+        PostEntity post = this.postRepository.findVisibleById(id, PostAccessPolicy.canViewDeleted())
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         return PostMapper.toDTO(post);
@@ -54,7 +54,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO updatePost(Integer id, PostRequest request, Integer userId) {
-        PostEntity postToUpdate = this.postRepository.findById(id)
+        PostEntity postToUpdate = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         PostAccessPolicy.verifyPostAccess(postToUpdate);
@@ -98,14 +98,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostSearchDTO> findAllPosts(Pageable pageable) {
-        var currentUserId = CurrentUser.getUserId();
-        return this.postRepository.findAll(pageable).map(post -> PostMapper.toSearchDTO(post, currentUserId));
-    }
-
-    @Override
     public Page<PostSearchDTO> searchPosts(PostSearchFilter request, Pageable pageable) {
-        Specification<PostEntity> specification = new PostSearchCriteria(request);
+        Specification<PostEntity> specification = new PostSearchCriteria(request, PostAccessPolicy.canViewDeleted());
         var currentUserId = CurrentUser.getUserId();
         return this.postRepository.findAll(specification, pageable).map(post -> PostMapper.toSearchDTO(post, currentUserId));
     }

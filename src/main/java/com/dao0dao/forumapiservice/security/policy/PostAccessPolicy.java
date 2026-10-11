@@ -18,4 +18,8 @@ public class PostAccessPolicy {
             throw new NoAccessException(ApiErrorMessage.USER_ACCESS_ERROR.getMessage());
         }
     }
+
+    public static boolean canViewDeleted() {
+        return CurrentUser.isAdmin();
+    }
 }

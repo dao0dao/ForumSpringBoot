@@ -13,6 +13,7 @@ import com.dao0dao.forumapiservice.model.entities.PostEntity_;
 import com.dao0dao.forumapiservice.model.entities.UserEntity;
 import com.dao0dao.forumapiservice.model.entities.UserEntity_;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
+import com.dao0dao.forumapiservice.model.request.post.PostStatusFilter;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -24,6 +25,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PostSearchCriteria implements Specification<PostEntity> {
     private final PostSearchFilter request;
+    private final boolean includeDeleted;
 
     @Override
     @Nullable
@@ -32,10 +34,32 @@ public class PostSearchCriteria implements Specification<PostEntity> {
             @Nullable CriteriaQuery<?> query,
             @NonNull CriteriaBuilder criteriaBuilder) {
 
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (!includeDeleted) {
+            predicates.add(criteriaBuilder.isFalse(root.get(PostEntity_.deleted)));
+        }
+
+        if (request.getStatus() == PostStatusFilter.ACTIVE) {
+            predicates.add(criteriaBuilder.isFalse(root.get(PostEntity_.deleted)));
+        } else if (request.getStatus() == PostStatusFilter.DELETED) {
+            predicates.add(criteriaBuilder.isTrue(root.get(PostEntity_.deleted)));
+        }
+
+        Predicate keywordPredicate = this.getKeywordPredicate(root, criteriaBuilder);
+        if (keywordPredicate != null) {
+            predicates.add(keywordPredicate);
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    }
+
+    @Nullable
+    private Predicate getKeywordPredicate(Root<PostEntity> root, CriteriaBuilder criteriaBuilder) {
         boolean hasKeywords = Objects.nonNull(request.getKeywords()) && !request.getKeywords().isBlank();
 
         if (!hasKeywords) {
-            return criteriaBuilder.conjunction();
+            return null;
         }
 
         var searchEverywhere = Boolean.FALSE.equals(request.getTitle()) && Boolean.FALSE.equals(request.getContent())
@@ -58,7 +82,7 @@ public class PostSearchCriteria implements Specification<PostEntity> {
         }
 
         if (keywordPredicates.isEmpty()) {
-            return criteriaBuilder.conjunction();
+            return null;
         }
 
         return criteriaBuilder.or(keywordPredicates.toArray(new Predicate[0]));

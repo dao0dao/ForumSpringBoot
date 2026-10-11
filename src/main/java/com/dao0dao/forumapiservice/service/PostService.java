@@ -19,6 +19,5 @@ public interface PostService {
     PostDTO likePost(@NotNull Integer id);
     PostDTO dislikePost(@NotNull Integer id);
     void softDeletePost(@NotNull Integer id);
-    Page<PostSearchDTO> findAllPosts(Pageable pageable);
     Page<PostSearchDTO> searchPosts(@NotNull PostSearchFilter request, Pageable pageable);
 }

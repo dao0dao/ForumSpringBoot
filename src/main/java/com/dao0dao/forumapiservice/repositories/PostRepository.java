@@ -13,6 +13,10 @@ import com.dao0dao.forumapiservice.model.entities.PostEntity;
 public interface PostRepository extends JpaRepository<PostEntity, Integer>, JpaSpecificationExecutor<PostEntity> {
     Optional<PostEntity> findByIdAndDeletedFalse(Integer id);
 
+    default Optional<PostEntity> findVisibleById(Integer id, boolean includeDeleted) {
+        return includeDeleted ? findById(id) : findByIdAndDeletedFalse(id);
+    }
+
     @Modifying(clearAutomatically = true)
     @Query(value = "INSERT INTO posts_likes (user_id, post_id) VALUES (:userId, :postId) On CONFLICT DO NOTHING", nativeQuery = true)
     void addLIke(@Param("userId") Integer userId, @Param("postId") Integer postId);

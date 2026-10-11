@@ -11,6 +11,7 @@ import com.dao0dao.forumapiservice.model.exception.NotFoundException;
 import com.dao0dao.forumapiservice.repositories.CommentRepository;
 import com.dao0dao.forumapiservice.repositories.PostRepository;
 import com.dao0dao.forumapiservice.repositories.UserRepository;
+import com.dao0dao.forumapiservice.security.policy.PostAccessPolicy;
 import com.dao0dao.forumapiservice.service.CommentService;
 import com.dao0dao.forumapiservice.utils.CurrentUser;
 
@@ -26,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO createComment(Integer postId, String message) {
-        var post = this.postRepository.findById(postId)
+        var post = this.postRepository.findVisibleById(postId, PostAccessPolicy.canViewDeleted())
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(postId)));
 
         var userId = CurrentUser.getUserId();

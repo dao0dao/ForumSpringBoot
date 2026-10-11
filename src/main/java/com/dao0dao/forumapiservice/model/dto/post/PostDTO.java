@@ -23,5 +23,6 @@ public class PostDTO implements Serializable {
     private Integer likes;
     private LocalDateTime created;
     private LocalDateTime updated;
+    private Boolean isDeleted;
     private List<CommentDTO> comments;
 }

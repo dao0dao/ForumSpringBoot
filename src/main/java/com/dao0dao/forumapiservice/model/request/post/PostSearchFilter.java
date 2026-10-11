@@ -12,4 +12,5 @@ public class PostSearchFilter implements Serializable {
     private Boolean title;
     private Boolean content;
     private String keywords;
+    private PostStatusFilter status;
 }
