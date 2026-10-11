@@ -2,9 +2,7 @@ package com.dao0dao.forumapiservice.model.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
@@ -18,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -50,7 +47,7 @@ public class PostEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime created;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = { CascadeType.ALL, CascadeType.MERGE }, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentEntity> comments = new ArrayList<>();
 
     @UpdateTimestamp
@@ -62,11 +59,8 @@ public class PostEntity {
     private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
-
-    @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
-    private Set<UserEntity> likedBy = new HashSet<>();
 
     @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
     private Integer likesCount = 0;
