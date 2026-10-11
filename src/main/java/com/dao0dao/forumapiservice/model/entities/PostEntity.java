@@ -34,13 +34,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostEntity {
-    public static final String ID_FIELD = "id";
-    public static final String TITLE_FIELD = "title";
-    public static final String CONTENT_FIElD = "content";
-    public static final String CREATED_FIELD = "created";
-    public static final String UPDATED_FIELD = "updated";
-    public static final String LIKES_FIELD = "likes";
-    public static final String DELETED_FIELD = "deleted";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

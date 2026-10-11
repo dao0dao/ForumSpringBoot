@@ -9,7 +9,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import com.dao0dao.forumapiservice.model.entities.PostEntity;
+import com.dao0dao.forumapiservice.model.entities.PostEntity_;
 import com.dao0dao.forumapiservice.model.entities.UserEntity;
+import com.dao0dao.forumapiservice.model.entities.UserEntity_;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -43,16 +45,16 @@ public class PostSearchCriteria implements Specification<PostEntity> {
         String likePattern = "%" + request.getKeywords() + "%";
 
         if (Boolean.TRUE.equals(request.getTitle()) || searchEverywhere) {
-            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity.TITLE_FIELD), likePattern));
+            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity_.title), likePattern));
         }
 
         if (Boolean.TRUE.equals(request.getContent()) || searchEverywhere) {
-            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity.CONTENT_FIElD), likePattern));
+            keywordPredicates.add(criteriaBuilder.like(root.get(PostEntity_.content), likePattern));
         }
 
         if (Boolean.TRUE.equals(request.getAuthorName()) || searchEverywhere) {
-            Join<PostEntity, UserEntity> userJoin = root.join("user");
-            keywordPredicates.add(criteriaBuilder.like(userJoin.get("username"), likePattern));
+            Join<PostEntity, UserEntity> userJoin = root.join(PostEntity_.user);
+            keywordPredicates.add(criteriaBuilder.like(userJoin.get(UserEntity_.username), likePattern));
         }
 
         if (keywordPredicates.isEmpty()) {
