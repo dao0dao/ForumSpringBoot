@@ -11,6 +11,8 @@ public enum ApiErrorMessage {
 
     POST_ERROR_BY_ID("Post with ID: '%s' was not found"),
 
+    RESOURCE_MODIFIED("The resource was modified in the meantime. Please refresh and try again"),
+
     ROLE_ERROR("Role: '%s' was not found"),
 
     SORT_FIELD_NOT_ALLOWED("Sorting by field '%s' is not allowed"),

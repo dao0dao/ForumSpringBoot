@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +37,12 @@ public class CommonControllerAdvice {
     protected ResponseEntity<String> handleDataExistException(DataExistException ex) {
         logStackTrace(ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    protected ResponseEntity<String> handleOptimisticLockingFailureException(OptimisticLockingFailureException ex) {
+        logStackTrace(ex);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiErrorMessage.RESOURCE_MODIFIED.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

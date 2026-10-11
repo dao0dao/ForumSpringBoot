@@ -77,8 +77,8 @@ public class PostSearchCriteria implements Specification<PostEntity> {
         }
 
         if (Boolean.TRUE.equals(request.getAuthorName()) || searchEverywhere) {
-            Join<PostEntity, UserEntity> userJoin = root.join(PostEntity_.user);
-            keywordPredicates.add(criteriaBuilder.like(userJoin.get(UserEntity_.username), likePattern));
+            Join<PostEntity, UserEntity> authorJoin = root.join(PostEntity_.author);
+            keywordPredicates.add(criteriaBuilder.like(authorJoin.get(UserEntity_.username), likePattern));
         }
 
         if (keywordPredicates.isEmpty()) {

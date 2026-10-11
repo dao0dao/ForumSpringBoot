@@ -81,7 +81,7 @@ public class UserEntity {
     @Builder.Default()
     private Boolean deleted = false;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default()
     private List<PostEntity> posts = new ArrayList<>();
 

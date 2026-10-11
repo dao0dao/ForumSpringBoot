@@ -1,6 +1,0 @@
-ALTER TABLE posts ADD COLUMN user_id INT;
-
-ALTER TABLE posts ALTER COLUMN user_id SET NOT NULL;
-
-ALTER TABLE posts
-ADD CONSTRAINT fk_posts_user FOREIGN KEY (user_id) REFERENCES users (id);

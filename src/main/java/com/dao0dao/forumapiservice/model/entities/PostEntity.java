@@ -22,6 +22,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,9 +55,13 @@ public class PostEntity {
     @Column(nullable = false)
     private boolean deleted;
 
+    @Version
+    @Column(nullable = false)
+    private Long version;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("created ASC")
@@ -66,10 +71,10 @@ public class PostEntity {
     private int likesCount;
 
     @Builder
-    private PostEntity(String title, String content, UserEntity user) {
+    private PostEntity(String title, String content, UserEntity author) {
         this.title = Objects.requireNonNull(title, "title");
         this.content = Objects.requireNonNull(content, "content");
-        this.user = Objects.requireNonNull(user, "user");
+        this.author = Objects.requireNonNull(author, "author");
     }
 
     public List<CommentEntity> getComments() {

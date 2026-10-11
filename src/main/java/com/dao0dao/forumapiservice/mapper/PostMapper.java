@@ -11,11 +11,11 @@ import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 
 public class PostMapper {
 
-    public static PostEntity toEntity(PostRequest postRequest, UserEntity user) {
+    public static PostEntity toEntity(PostRequest postRequest, UserEntity author) {
         if (postRequest == null) {
             return null;
         }
-        return PostEntity.builder().title(postRequest.getTitle()).content(postRequest.getContent()).user(user).build();
+        return PostEntity.builder().title(postRequest.getTitle()).content(postRequest.getContent()).author(author).build();
 
     }
 
@@ -34,6 +34,7 @@ public class PostMapper {
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .isDeleted(post.isDeleted())
+                .version(post.getVersion())
                 .comments(comments)
                 .build();
     }
@@ -46,8 +47,8 @@ public class PostMapper {
         List<CommentDTO> comments = post.getComments().stream().map(CommentMapper::toDTO).toList();
 
         return PostSearchDTO.builder()
-                .authorName(post.getUser().getUsername())
-                .canEdit(post.getUser().getId().equals(currentUserId))
+                .authorName(post.getAuthor().getUsername())
+                .canEdit(post.getAuthor().getId().equals(currentUserId))
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
@@ -55,6 +56,7 @@ public class PostMapper {
                 .title(post.getTitle())
                 .updated(post.getUpdated())
                 .isDeleted(post.isDeleted())
+                .version(post.getVersion())
                 .comments(comments)
                 .build();
     }

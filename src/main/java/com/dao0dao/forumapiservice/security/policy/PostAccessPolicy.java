@@ -12,7 +12,7 @@ public class PostAccessPolicy {
         var userId = CurrentUser.getUserId();
         var isAdmin = CurrentUser.isAdmin();
 
-        boolean isOwner = post.getUser().getId().equals(userId);
+        boolean isOwner = post.getAuthor().getId().equals(userId);
 
         if (!(isAdmin || isOwner)) {
             throw new NoAccessException(ApiErrorMessage.USER_ACCESS_ERROR.getMessage());

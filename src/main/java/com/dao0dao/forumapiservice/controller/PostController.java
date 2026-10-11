@@ -15,6 +15,7 @@ import com.dao0dao.forumapiservice.model.entities.PostEntity_;
 import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
 import com.dao0dao.forumapiservice.model.request.post.PostStatusFilter;
+import com.dao0dao.forumapiservice.model.request.post.UpdatePostRequest;
 import com.dao0dao.forumapiservice.model.response.ApiResponse;
 import com.dao0dao.forumapiservice.model.response.payloads.PaginationPayload;
 import com.dao0dao.forumapiservice.security.annotation.ActiveUser;
@@ -68,7 +69,7 @@ public class PostController {
 
     @PatchMapping("${end.points.id}${end.points.update}")
     public ResponseEntity<ApiResponse<PostDTO>> updatePostById(@PathVariable(name = "id") Integer postId,
-            @Valid @RequestBody PostRequest post) {
+            @Valid @RequestBody UpdatePostRequest post) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
         var userId = CurrentUser.getUserId();

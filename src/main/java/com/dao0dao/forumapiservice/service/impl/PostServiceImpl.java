@@ -1,5 +1,8 @@
 package com.dao0dao.forumapiservice.service.impl;
 
+import java.util.Objects;
+
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,6 +19,7 @@ import com.dao0dao.forumapiservice.model.entities.UserEntity;
 import com.dao0dao.forumapiservice.model.exception.NotFoundException;
 import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
+import com.dao0dao.forumapiservice.model.request.post.UpdatePostRequest;
 import com.dao0dao.forumapiservice.repositories.PostRepository;
 import com.dao0dao.forumapiservice.repositories.UserRepository;
 import com.dao0dao.forumapiservice.repositories.criteria.PostSearchCriteria;
@@ -53,16 +57,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO updatePost(Integer id, PostRequest request, Integer userId) {
+    public PostDTO updatePost(Integer id, UpdatePostRequest request, Integer userId) {
         PostEntity postToUpdate = this.postRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_ERROR_BY_ID.getMessage(id)));
 
         PostAccessPolicy.verifyPostAccess(postToUpdate);
 
+        if (!Objects.equals(postToUpdate.getVersion(), request.getVersion())) {
+            throw new OptimisticLockingFailureException(ApiErrorMessage.RESOURCE_MODIFIED.getMessage());
+        }
+
         postToUpdate.update(request.getTitle(), request.getContent());
 
-        this.postRepository.save(postToUpdate);
-        return PostMapper.toDTO(postToUpdate);
+        PostEntity savedPost = this.postRepository.save(postToUpdate);
+        return PostMapper.toDTO(savedPost);
     }
 
     @Override

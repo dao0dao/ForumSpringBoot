@@ -24,5 +24,6 @@ public class PostDTO implements Serializable {
     private Instant created;
     private Instant updated;
     private Boolean isDeleted;
+    private Long version;
     private List<CommentDTO> comments;
 }

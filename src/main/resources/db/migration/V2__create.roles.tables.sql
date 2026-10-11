@@ -6,7 +6,7 @@ CREATE TABLE roles (
     created_by VARCHAR(50) NOT NULL
 );
 
-CREATE Table users_roles (
+CREATE TABLE users_roles (
     user_id INT NOT NULL,
     role_id INT NOT NULL,
     PRIMARY KEY (user_id, role_id),
