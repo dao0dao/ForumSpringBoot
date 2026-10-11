@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,8 +21,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,18 +46,20 @@ public class PostEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = { CascadeType.ALL, CascadeType.MERGE }, orphanRemoval = true)
     private List<CommentEntity> comments = new ArrayList<>();
 
+    @UpdateTimestamp
     @Column(nullable = false)
-    private LocalDateTime updated = LocalDateTime.now();
+    private LocalDateTime updated;
 
     @Setter
     @Column(nullable = false)
-    private Boolean deleted = false;
+    private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -74,17 +76,5 @@ public class PostEntity {
         this.title = title;
         this.content = content;
         this.user = user;
-    }
-
-    @PrePersist
-    private void initTime() {
-        this.created = LocalDateTime.now();
-        this.updated = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void setTime() {
-        this.updated = LocalDateTime.now();
-
     }
 }

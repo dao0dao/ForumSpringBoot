@@ -73,7 +73,7 @@ public class PostMapper {
                 .likes(post.getLikesCount())
                 .title(post.getTitle())
                 .updated(post.getUpdated())
-                .isDeleted(post.getDeleted())
+                .isDeleted(post.isDeleted())
                 .comments(comments)
                 .build();
     }
