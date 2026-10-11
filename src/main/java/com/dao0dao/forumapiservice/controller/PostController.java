@@ -1,6 +1,7 @@
 package com.dao0dao.forumapiservice.controller;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.dao0dao.forumapiservice.model.constans.ApiLogMessage;
 import com.dao0dao.forumapiservice.model.dto.post.PostDTO;
 import com.dao0dao.forumapiservice.model.dto.post.PostSearchDTO;
+import com.dao0dao.forumapiservice.model.entities.PostEntity_;
 import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
 import com.dao0dao.forumapiservice.model.response.ApiResponse;
@@ -39,6 +41,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @RequestMapping("${end.points.posts}")
 public class PostController {
+
+    private static final Set<String> SORTABLE_FIELDS = Set.of(
+            PostEntity_.ID, PostEntity_.TITLE, PostEntity_.CREATED, PostEntity_.UPDATED);
 
     private final PostService postService;
 
@@ -112,7 +117,7 @@ public class PostController {
         ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        var pageable = PageBuilder.getPageable(page, limit, sortsBy);
+        var pageable = PageBuilder.getPageable(page, limit, sortsBy, SORTABLE_FIELDS);
         var postSearchFilter = new PostSearchFilter(authorName, title, content, keywords);
         Page<PostSearchDTO> postsListPage = this.postService.searchPosts(postSearchFilter, pageable);
 

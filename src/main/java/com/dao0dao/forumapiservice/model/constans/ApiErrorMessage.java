@@ -14,6 +14,8 @@ public enum ApiErrorMessage {
 
     ROLE_ERROR("Role: '%s' was not found"),
 
+    SORT_FIELD_NOT_ALLOWED("Sorting by field '%s' is not allowed"),
+
     TYPE_MISMATCH("Field '%s' has invalid value type. Expected '%s'."),
 
     USER_ACCESS_ERROR("Access denied"),

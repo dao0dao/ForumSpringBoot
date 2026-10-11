@@ -15,11 +15,11 @@ public interface PostRepository extends JpaRepository<PostEntity, Integer>, JpaS
 
     Optional<PostEntity> findByIdAndDeletedFalse(Integer id);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query(value = "INSERT INTO posts_likes (user_id, post_id) VALUES (:userId, :postId) On CONFLICT DO NOTHING", nativeQuery = true)
     void addLIke(@Param("userId") Integer userId, @Param("postId") Integer postId);
     
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM posts_likes WHERE user_id = :userId AND post_id = :postId", nativeQuery = true)
     void deleteLike(@Param("userId") Integer userId, @Param("postId") Integer postId);
 }
