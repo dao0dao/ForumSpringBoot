@@ -24,19 +24,9 @@ public class PostMapper {
             return null;
         }
 
-        List<CommentDTO> comments = null;
-        if (post.getComments() != null) {
-            comments = post.getComments().stream().map(comment -> {
-                var commentDTO = CommentMapper.toDTO(comment);
-                if (commentDTO != null && comment.getIsDeleted()) {
-                    commentDTO.setMessage("This comment has been deleted.");
-                }
-                return commentDTO;
-            }).toList();
+        List<CommentDTO> comments = post.getComments().stream().map(CommentMapper::toDTO).toList();
 
-        }
-
-        return PostDTO.builder()                
+        return PostDTO.builder()
                 .content(post.getContent())
                 .created(post.getCreated())
                 .id(post.getId())
@@ -52,17 +42,7 @@ public class PostMapper {
             return null;
         }
 
-        List<CommentDTO> comments = null;
-        if (post.getComments() != null) {
-            comments = post.getComments().stream().map(comment -> {
-                var commentDTO = CommentMapper.toDTO(comment);
-                if (commentDTO != null && comment.getIsDeleted()) {
-                    commentDTO.setMessage("This comment has been deleted.");
-                }
-                return commentDTO;
-            }).toList();
-
-        }
+        List<CommentDTO> comments = post.getComments().stream().map(CommentMapper::toDTO).toList();
 
         return PostSearchDTO.builder()
                 .authorName(post.getUser().getUsername())

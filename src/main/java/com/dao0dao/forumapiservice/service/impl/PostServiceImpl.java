@@ -63,8 +63,7 @@ public class PostServiceImpl implements PostService {
 
         PostAccessPolicy.verifyPostAccess(postToUpdate);
 
-        postToUpdate.setTitle(request.getTitle());
-        postToUpdate.setContent(request.getContent());
+        postToUpdate.update(request.getTitle(), request.getContent());
 
         this.postRepository.save(postToUpdate);
         return PostMapper.toDTO(postToUpdate);
@@ -98,7 +97,7 @@ public class PostServiceImpl implements PostService {
 
         PostAccessPolicy.verifyPostAccess(post);
 
-        post.setDeleted(true);
+        post.markAsDeleted();
         this.postRepository.save(post);
     }
 

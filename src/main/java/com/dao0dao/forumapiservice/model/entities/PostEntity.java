@@ -18,12 +18,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "posts")
@@ -35,11 +35,9 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
     @Column(nullable = false)
     private String title;
 
-    @Setter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
@@ -47,14 +45,10 @@ public class PostEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime created;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentEntity> comments = new ArrayList<>();
-
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updated;
 
-    @Setter
     @Column(nullable = false)
     private boolean deleted;
 
@@ -62,13 +56,26 @@ public class PostEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("created ASC")
+    private List<CommentEntity> comments = new ArrayList<>();
+
     @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
-    private Integer likesCount = 0;
+    private int likesCount;
 
     @Builder
     private PostEntity(String title, String content, UserEntity user) {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void markAsDeleted() {
+        this.deleted = true;
     }
 }

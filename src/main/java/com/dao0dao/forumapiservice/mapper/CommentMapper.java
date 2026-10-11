@@ -10,10 +10,13 @@ public class CommentMapper {
         if (comment == null) {
             return null;
         }
+        boolean deleted = comment.getIsDeleted();
         return CommentDTO.builder()
+                .id(comment.getId())
                 .created(comment.getCreated())
-                .message(comment.getMessage())
-                .username(comment.getUser().getUsername())
+                .isDeleted(deleted)
+                .message(deleted ? null : comment.getMessage())
+                .username(deleted ? null : comment.getUser().getUsername())
                 .build();
     }
 

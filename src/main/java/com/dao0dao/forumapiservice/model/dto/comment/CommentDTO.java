@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentDTO implements Serializable {
-    
+
+    private Integer id;
     private LocalDateTime created;
+    private Boolean isDeleted;
     private String message;
     private String username;
 }
