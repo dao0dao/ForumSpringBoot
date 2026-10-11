@@ -24,7 +24,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +32,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "posts")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 public class PostEntity {
     public static final String ID_FIELD = "id";
     public static final String TITLE_FIELD = "title";
@@ -50,27 +46,26 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Setter
     @Column(nullable = false)
     @Size(max = 255)
     private String title;
 
+    @Setter
     @Column(nullable = false, length = 500)
     private String content;
 
     @Column(nullable = false, updatable = false)
-    @Builder.Default()
     private LocalDateTime created = LocalDateTime.now();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = { CascadeType.ALL, CascadeType.MERGE }, orphanRemoval = true)
-    @Builder.Default()
     private List<CommentEntity> comments = new ArrayList<>();
 
     @Column(nullable = false)
-    @Builder.Default()
     private LocalDateTime updated = LocalDateTime.now();
 
+    @Setter
     @Column(nullable = false)
-    @Builder.Default()
     private Boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -78,12 +73,17 @@ public class PostEntity {
     private UserEntity user;
 
     @ManyToMany(mappedBy = "likes", fetch = FetchType.LAZY)
-    @Builder.Default()
     private Set<UserEntity> likedBy = new HashSet<>();
 
     @Formula("(select count(*) from posts_likes pl where pl.post_id = {alias}.id)")
-    @Builder.Default()
     private Integer likesCount = 0;
+
+    @Builder
+    private PostEntity(String title, String content, UserEntity user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
 
     @PrePersist
     private void initTime() {
