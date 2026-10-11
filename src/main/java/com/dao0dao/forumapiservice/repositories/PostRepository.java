@@ -11,8 +11,6 @@ import org.springframework.data.repository.query.Param;
 import com.dao0dao.forumapiservice.model.entities.PostEntity;
 
 public interface PostRepository extends JpaRepository<PostEntity, Integer>, JpaSpecificationExecutor<PostEntity> {
-    boolean existsByTitle(String title);
-
     Optional<PostEntity> findByIdAndDeletedFalse(Integer id);
 
     @Modifying(clearAutomatically = true)

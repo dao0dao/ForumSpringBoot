@@ -10,7 +10,6 @@ public enum ApiErrorMessage {
     COMMENT_ERROR_BY_ID("Comment with ID: '%s' was not found"),
 
     POST_ERROR_BY_ID("Post with ID: '%s' was not found"),
-    POST_ALREADY_EXIST("Post with title: '%s' already exist"),
 
     ROLE_ERROR("Role: '%s' was not found"),
 

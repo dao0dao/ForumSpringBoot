@@ -6,3 +6,5 @@ CREATE Table comments (
     post_id INT NOT NULL REFERENCES posts (id) ON DELETE CASCADE,
     user_id INT NOT NULL REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_comments_post_id_created ON comments (post_id, created);

@@ -13,7 +13,6 @@ import com.dao0dao.forumapiservice.model.dto.post.PostDTO;
 import com.dao0dao.forumapiservice.model.dto.post.PostSearchDTO;
 import com.dao0dao.forumapiservice.model.entities.PostEntity;
 import com.dao0dao.forumapiservice.model.entities.UserEntity;
-import com.dao0dao.forumapiservice.model.exception.DataExistException;
 import com.dao0dao.forumapiservice.model.exception.NotFoundException;
 import com.dao0dao.forumapiservice.model.request.post.PostRequest;
 import com.dao0dao.forumapiservice.model.request.post.PostSearchFilter;
@@ -43,9 +42,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO createPost(PostRequest request, Integer userId) {
-        if (this.postRepository.existsByTitle(request.getTitle())) {
-            throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXIST.getMessage(request.getTitle()));
-        }
         UserEntity user = this.userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ApiErrorMessage.USER_ERROR_BY_ID.getMessage(userId)));
 

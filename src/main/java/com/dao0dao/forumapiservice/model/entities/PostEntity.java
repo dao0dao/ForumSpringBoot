@@ -2,7 +2,9 @@ package com.dao0dao.forumapiservice.model.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
@@ -65,14 +67,18 @@ public class PostEntity {
 
     @Builder
     private PostEntity(String title, String content, UserEntity user) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
+        this.title = Objects.requireNonNull(title, "title");
+        this.content = Objects.requireNonNull(content, "content");
+        this.user = Objects.requireNonNull(user, "user");
+    }
+
+    public List<CommentEntity> getComments() {
+        return Collections.unmodifiableList(this.comments);
     }
 
     public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+        this.title = Objects.requireNonNull(title, "title");
+        this.content = Objects.requireNonNull(content, "content");
     }
 
     public void markAsDeleted() {
