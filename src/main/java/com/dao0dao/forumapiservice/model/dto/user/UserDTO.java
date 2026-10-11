@@ -1,7 +1,7 @@
 package com.dao0dao.forumapiservice.model.dto.user;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import com.dao0dao.forumapiservice.model.enums.RegistrationStatus;
@@ -20,10 +20,10 @@ public class UserDTO implements Serializable {
     
     private Integer id;
     private String username;
-    private LocalDateTime created;
-    private LocalDateTime updated;
+    private Instant created;
+    private Instant updated;
     private RegistrationStatus registration_status;
     private List<UserRole> roles;
-    private LocalDateTime lastLogin;
+    private Instant lastLogin;
     private Boolean deleted;
 }

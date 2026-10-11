@@ -1,6 +1,6 @@
 package com.dao0dao.forumapiservice.model.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +32,7 @@ public class CommentEntity {
 
     @Column()
     @Builder.Default()
-    private LocalDateTime created = LocalDateTime.now();
+    private Instant created = Instant.now();
 
     @Column(name = "is_deleted")
     @Builder.Default()

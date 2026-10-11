@@ -1,6 +1,6 @@
 package com.dao0dao.forumapiservice.security.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(Instant.now());
         this.userRepository.save(user);
         return new CustomUserDetails(user);
     }

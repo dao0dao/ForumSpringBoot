@@ -1,6 +1,6 @@
 package com.dao0dao.forumapiservice.model.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,11 +45,11 @@ public class PostEntity {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created;
+    private Instant created;
 
     @UpdateTimestamp
     @Column(nullable = false)
-    private LocalDateTime updated;
+    private Instant updated;
 
     @Column(nullable = false)
     private boolean deleted;

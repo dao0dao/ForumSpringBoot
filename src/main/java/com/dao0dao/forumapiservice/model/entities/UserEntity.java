@@ -1,6 +1,6 @@
 package com.dao0dao.forumapiservice.model.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,11 +63,11 @@ public class UserEntity {
 
     @Column(nullable = false)
     @Builder.Default()
-    private LocalDateTime created = LocalDateTime.now();
+    private Instant created = Instant.now();
 
     @Column(nullable = false)
     @Builder.Default()
-    private LocalDateTime updated = LocalDateTime.now();
+    private Instant updated = Instant.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "registration_status")
@@ -75,7 +75,7 @@ public class UserEntity {
     private RegistrationStatus registrationStatus = RegistrationStatus.INACTIVE;
 
     @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    private Instant lastLogin;
 
     @Column
     @Builder.Default()

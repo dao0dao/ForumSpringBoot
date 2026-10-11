@@ -1,7 +1,7 @@
 package com.dao0dao.forumapiservice.model.dto.comment;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CommentDTO implements Serializable {
 
     private Integer id;
-    private LocalDateTime created;
+    private Instant created;
     private Boolean isDeleted;
     private String message;
     private String username;
